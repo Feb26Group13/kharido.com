@@ -2,7 +2,6 @@ import { useState } from "react"
 import { useDispatch } from "react-redux";
 import { login,logout } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import "../styles/Auth.css"
 export default function LoginComp(){
     const[username,setusername]=useState("");
     const[password,setpassword]=useState("");
