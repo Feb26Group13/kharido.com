@@ -17,7 +17,7 @@ let con = mysql.createConnection({
     host:"localhost",
     user: "root",
     password: "root",
-    database: "project_db"
+    database: "kharido_com_db"
 })
 con.connect(function(err){
     if(!err)
@@ -31,16 +31,24 @@ con.connect(function(err){
 //route for login
 app.post('/login' ,function(req,res){
     
-    let query = "select * from users where username = ? and password = ?"
+    let query = `
+SELECT u.userid,u.username,u.roleid,r.rolename
+FROM users u
+JOIN roles r
+ON u.roleid = r.roleid
+WHERE u.username = ?
+AND u.password = ?
+AND u.status='ACTIVE'
+`;
     con.query(query, [req.body.username, req.body.password], function(err,result) {
          if(!err) {
 	 	if(result.length === 1)
-	            res.status(200).json({user: {userid: result[0].userid, username:result[0].username, role: result[0].roleid }, token:"abc123"});
+	            res.status(200).json({user: {userid: result[0].userid, username:result[0].username, role: result[0].roleid, rolename:result[0].rolename }, token:"abc123"});
                 else
 	            res.status(404).send("login failed");
          } 
 	 else{
-              res.staus(500).send("Could not fetch data");
+              res.status(500).send("Could not fetch data");
          }
     })
 })
