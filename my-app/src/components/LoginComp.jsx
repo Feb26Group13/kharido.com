@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
+import { login,logout } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 export default function LoginComp(){
     const[username,setusername]=useState("");
@@ -8,19 +8,22 @@ export default function LoginComp(){
     const[msg,setmsg]=useState("")
     const navigate = useNavigate();
     const dispatch=useDispatch();
-    const reqoptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username:username,
-        password:password,
-      }),
-    };
+    
     
     const handleSubmit=(e)=>{
         e.preventDefault();
+
+        const reqoptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username:username,
+                password:password,
+            })
+        };
+
         fetch("http://localhost:3000/login",reqoptions).then(
         resp=>{
             if(resp.status===200){
@@ -34,6 +37,9 @@ export default function LoginComp(){
     )
     .then(data => {
     console.log(JSON.stringify(data));
+    if(!data.user){
+        return;
+    }
 
     dispatch(
         login({
@@ -46,10 +52,10 @@ export default function LoginComp(){
         navigate("/admin");
     }
     else if (data.user.role === 2) {
-        navigate("/user");
+        navigate("/seller");
     }
     else {
-        navigate("/home");
+        navigate("/user");
     }
 })
 
@@ -62,12 +68,10 @@ export default function LoginComp(){
             Enter Username:
             <input type="text" name="username" value={username} onChange={(e)=>{setusername(e.target.value)}}/><br/>
             Enter Password:
-            <input type="text" name="password" value={password} onChange={(e)=>{setpassword(e.target.value)}}/><br/>
+            <input type="password" name="password" value={password} onChange={(e)=>{setpassword(e.target.value)}}/><br/>
             <input type="submit" value="LOGIN" onClick={handleSubmit}/>
         </form>
         <p>{msg}</p>
-        <p>{username}</p>
-        <p>{password}</p>
         </>
     )
 }
