@@ -53,10 +53,118 @@ AND u.status='ACTIVE'
     })
 })
 
-/*app.post('/register' ,function(req,res){
+app.post('/register/customer' ,function(req,res){
     
+    let userQuery =`
+    INSERT INTO users
+    (username,email,password,roleid,status)
+    VALUES(?,?,?,3,'ACTIVE')`;
+
+    con.query(
+        userQuery,[
+            req.body.username,
+            req.body.email,
+            req.body.password
+        ],
+        function(err,result){
+                if(err){
+                console.log(err);
+                return res.status(500).send("User registration failed");
+            }
+
+            let userid = result.insertId;
+
+            let profileQuery = `
+            INSERT INTO customer_profiles
+            (userid,firstname,lastname,phone)
+            VALUES(?,?,?,?)`;
+
+            con.query(
+                profileQuery,
+                [
+                    userid,
+                    req.body.firstname,
+                    req.body.lastname,
+                    req.body.phone
+                ],
+                function(err2){
+                    if(err2){
+                        console.log(err2);
+                        return res.status(500).send("profile creation failed");
+                    }
+                    res.status(201).json({
+                        message:"Customer Resistered Successfully"
+                    });
+                }
+            );
+        }
+    );
     
-})*/
+});
+
+
+app.post('/register/seller', function(req,res){
+
+    let userQuery = `
+    INSERT INTO users
+    (username,email,password,roleid,status)
+    VALUES(?,?,?,2,'ACTIVE')
+    `;
+
+    con.query(
+        userQuery,
+        [
+            req.body.username,
+            req.body.email,
+            req.body.password
+        ],
+        function(err,result){
+
+            if(err){
+                console.log(err);
+                return res.status(500).send("Seller registration failed");
+            }
+
+            let userid = result.insertId;
+
+            let sellerQuery = `
+            INSERT INTO seller_profiles
+            (
+                userid,
+                shop_name,
+                gst_number,
+                phone,
+                approval_status
+            )
+            VALUES(?,?,?,?,?)
+            `;
+
+            con.query(
+                sellerQuery,
+                [
+                    userid,
+                    req.body.shop_name,
+                    req.body.gst_number,
+                    req.body.phone,
+                    'PENDING'
+                ],
+                function(err2){
+
+                    if(err2){
+                        console.log(err2);
+                        return res.status(500).send("Seller profile creation failed");
+                    }
+
+                    res.status(201).json({
+                        message:"Seller Registered Successfully",
+                        approval_status:"PENDING"
+                    });
+
+                }
+            );
+        }
+    );
+});
 
 
 
