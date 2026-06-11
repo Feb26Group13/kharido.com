@@ -21,7 +21,7 @@ export default function AdminDashBoard(){
         <div className="p-3 flex-grow-1">
             <Outlet />
         </div>
-        </div>zxc
+        </div>
       
 
         </>
