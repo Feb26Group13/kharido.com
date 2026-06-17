@@ -1,45 +1,66 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 export default function SellerDashboard() {
-    return (
-        <>
-            <h2>Seller Dashboard</h2>
+  return (
+    <div className="container-fluid">
+      <div className="row">
 
-            <div className="d-flex">
+        {/* Sidebar */}
+        <div className="col-md-3 col-lg-2 bg-dark text-white min-vh-100 p-3">
 
-                <ul className="nav nav-pills flex-column p-3 border-end">
+          <h3 className="text-center mb-4">
+            Seller Panel
+          </h3>
 
-                    <li className="nav-item">
-                        <NavLink to="products">
-                            My Products
-                        </NavLink>
-                    </li>
+          <div className="d-flex flex-column">
 
-                    <li className="nav-item">
-                        <NavLink to="add-product">
-                            Add Product
-                        </NavLink>
-                    </li>
+            <Link
+              to="add-product"
+              className="btn btn-outline-light mb-2"
+            >
+              Add Product
+            </Link>
 
-                    <li className="nav-item">
-                        <NavLink to="orders">
-                            Orders
-                        </NavLink>
-                    </li>
+            <Link
+              to="products"
+              className="btn btn-outline-light mb-2"
+            >
+              My Products
+            </Link>
 
-                    <li className="nav-item">
-                        <NavLink to="logout">
-                            Logout
-                        </NavLink>
-                    </li>
+            <Link
+              to="orders"
+              className="btn btn-outline-light mb-2"
+            >
+              Orders
+            </Link>
 
-                </ul>
+            <Link
+              to="profile"
+              className="btn btn-outline-light mb-2"
+            >
+              Profile
+            </Link>
 
-                <div className="p-3 flex-grow-1">
-                    <Outlet />
-                </div>
+            <Link
+              to="logout"
+              className="btn btn-danger"
+            >
+              Logout
+            </Link>
 
-            </div>
-        </>
-    );
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="col-md-9 col-lg-10 p-4">
+          <h2>Seller Dashboard</h2>
+          <hr />
+
+          <Outlet />
+        </div>
+
+      </div>
+    </div>
+  );
 }

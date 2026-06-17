@@ -1,5 +1,17 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import HomeComp from './components/HomeComp.jsx'
+import ProtectedRoutes from './components/ProtectedRoutes.jsx'
+import UserDashBoard from './components/UserDashBoard.jsx'
+import AdminDashBoard from './components/AdminDashBoard.jsx'
+import LogoutComp from './components/Logout.jsx'
+import SellerDashboard from './components/SellerDashboard.jsx'
+import SellerProducts from './components/SellerProducts.jsx'
+import AddProduct from './components/AddProduct.jsx'
+import SellerOrders from './components/SellerOrders.jsx'
+import SellerProfile from './components/SellerProfile.jsx'
+import SellerRegisterComp from './components/SellerRegisterComp.jsx'
+import RegisterChoice from './components/RegisterChoice.jsx'
 
 import HomeComp from './components/HomeComp'
 import LoginComp from './components/LoginComp'
@@ -59,19 +71,23 @@ function App() {
         </Route>
 
         {/* Seller Routes */}
-
-        <Route
-          path="/seller"
-          element={
-            <ProtectedRoutes role={2}>
-              <SellerDashboard />
-            </ProtectedRoutes>
-          }
-        >
-          <Route path="products" element={<h1>My Products</h1>} />
-          <Route path="add-product" element={<h1>Add Product</h1>} />
-          <Route path="orders" element={<h1>Seller Orders</h1>} />
-          <Route path="logout" element={<LogoutComp />} />
+    <>
+     <BrowserRouter>
+        <Routes>
+          {/* Registration Routes */}
+          {/* <Route path="register" element={<h1>Select Registration Type</h1>} /> */}
+          {/* <Route path="register/user" element={<UserRegisterComp />} /> */}
+          <Route path="register/seller" element={<SellerRegisterComp />} />
+                  <Route path="/" element={<HomeComp/>}/>
+                 <Route path="login" element={<LoginComp/>}/>
+                 <Route path="register" element={<RegisterChoice />} />
+                  <Route path="register/seller" element={<SellerRegisterComp />} />
+                 {/* <Route path="register" element={<h1> Registrtion Form </h1>}/> */}
+        
+        <Route path="/user" element={<ProtectedRoutes role={2}><UserDashBoard/></ProtectedRoutes>}>
+        <Route path="users" element={<h1> Users</h1>} />
+                <Route path="reports" element={ <h1> Reports</h1>} />
+                <Route path="logout" element={<LogoutComp/>} /> 
         </Route>
 
         {/* Admin Routes */}
@@ -91,6 +107,23 @@ function App() {
           <Route path="refunds" element={<h1>Refunds</h1>} />
           <Route path="logout" element={<LogoutComp />} />
         </Route>
+        {/* Seller Routes */}
+            <Route
+              path="/seller"
+              element={
+                <ProtectedRoutes role={2}>
+                  <SellerDashboard />
+                </ProtectedRoutes>
+              }
+            >
+              <Route path="products" element={<SellerProducts />} />
+              <Route path="add-product" element={<AddProduct />} />
+              <Route path="orders" element={<SellerOrders />} />
+              <Route path="profile" element={<SellerProfile />} />
+              <Route path="logout" element={<LogoutComp />} />
+            </Route>
+        </Routes>
+        
 
         {/* Invalid Route */}
 

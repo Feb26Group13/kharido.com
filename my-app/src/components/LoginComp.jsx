@@ -23,30 +23,33 @@ export default function LoginComp(){
                 password:password,
             })
         };
-
-        fetch("http://localhost:3000/login",reqoptions).then(
-        resp=>{
-            if(resp.status===200){
+        fetch("http://localhost:3000/login",reqoptions)
+        .then( resp=>{
+            if(resp.status===200)
                 return resp.json()
-            }
-            else if(resp.status===404){
+            else if(resp.status===404)
                 setmsg("Wrong Id or Password")
                 return {}
-            }
+            
         }
     )
     .then(data => {
     console.log(JSON.stringify(data));
-    if(!data.user){
-        return;
-    }
 
-    dispatch(
-        login({
-            user: data.user,
-            token: data.token,
-        })
-    );
+   dispatch(
+    login({
+        user: data.user,
+        token: data.token,
+    })
+);
+
+localStorage.setItem(
+    "auth",
+    JSON.stringify({
+        user: data.user,
+        token: data.token,
+    })
+);
 
     if (data.user.role === 1) {
         navigate("/admin");
