@@ -1,29 +1,29 @@
 import { NavLink, Outlet } from "react-router-dom";
 
-export default function UserDashBoard() {
+export default function SellerDashboard() {
     return (
         <>
-            <h2>Customer Dashboard</h2>
+            <h2>Seller Dashboard</h2>
 
             <div className="d-flex">
 
                 <ul className="nav nav-pills flex-column p-3 border-end">
 
                     <li className="nav-item">
-                        <NavLink to="profile">
-                            Profile
+                        <NavLink to="products">
+                            My Products
+                        </NavLink>
+                    </li>
+
+                    <li className="nav-item">
+                        <NavLink to="add-product">
+                            Add Product
                         </NavLink>
                     </li>
 
                     <li className="nav-item">
                         <NavLink to="orders">
                             Orders
-                        </NavLink>
-                    </li>
-
-                    <li className="nav-item">
-                        <NavLink to="wishlist">
-                            Wishlist
                         </NavLink>
                     </li>
 
