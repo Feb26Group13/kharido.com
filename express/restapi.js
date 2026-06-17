@@ -166,6 +166,49 @@ app.post('/register/seller', function(req,res){
     );
 });
 
+//add product route
+app.post('/add-product', function(req,res){
+
+    console.log("Received Product:");
+    console.log(req.body);
+
+    let query = `
+    INSERT INTO products
+    (
+        sellerid,
+        product_name,
+        category,
+        price,
+        description,
+        image_url
+    )
+    VALUES(?,?,?,?,?,?)
+    `;
+    con.query(
+        query,
+        [
+            req.body.sellerid,
+            req.body.product_name,
+            req.body.category,
+            req.body.price,
+            req.body.description,
+            req.body.image_url
+        ],
+        function(err,result){
+
+            if(err){
+                console.log(err);
+                return res.status(500).json({
+                    message:"Product Add Failed"
+                });
+            }
+
+            res.status(201).json({
+                message:"Product Added Successfully"
+            });
+        }
+    );
+});
 
 
 app.all('/*splat', function(req,res) {
