@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 function Navbar() {
 
-  const userName = localStorage.getItem("userName");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userName = user?.username;
 
   const handleLogout = () => {
-    localStorage.removeItem("userName");
-    localStorage.removeItem("role");
+    localStorage.removeItem("user");
 
     window.location.reload();
   };

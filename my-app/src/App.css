@@ -334,3 +334,339 @@ body {
   border-radius: 8px;
   margin-bottom: 15px;
 }
+/* 
+   ADMIN LAYOUT
+ */
+
+
+.admin-container{
+
+display:flex;
+
+min-height:100vh;
+
+}
+
+
+.sidebar{
+
+width:240px;
+
+background:#1e1e2f;
+
+color:white;
+
+padding:20px;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+
+
+.sidebar h2{
+
+text-align:center;
+
+font-size:28px;
+
+}
+
+
+
+.sidebar a{
+
+color:white;
+
+text-decoration:none;
+
+padding:14px;
+
+margin:5px 0;
+
+border-radius:8px;
+
+}
+
+
+
+.sidebar a:hover,
+.sidebar a.active{
+
+background:#2874f0;
+
+}
+
+
+
+.admin-content{
+
+flex:1;
+
+padding:30px;
+
+background:#f5f6fa;
+
+}
+
+
+/* 
+ DASHBOARD CARDS
+   */
+
+
+.dashboard-cards{
+
+display:grid;
+
+grid-template-columns:repeat(5,1fr);
+
+gap:20px;
+
+}
+
+
+
+.dashboard-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:12px;
+
+text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+
+
+.dashboard-card h2{
+
+font-size:32px;
+
+color:#2874f0;
+
+}
+
+
+/* 
+ TABLE COMMON
+ */
+
+
+.admin-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+}
+
+
+
+.admin-table th{
+
+background:#2874f0;
+
+color:white;
+
+padding:15px;
+
+}
+
+
+
+.admin-table td{
+
+padding:15px;
+
+border-bottom:1px solid #ddd;
+
+}
+
+
+
+.admin-table tr:hover{
+
+background:#f5f5f5;
+
+}
+
+
+/* 
+ ORDERS
+ */
+
+
+.orders-box,
+.product-admin-box,
+.customer-box,
+.activity-box,
+.settings-card,
+.report-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:12px;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+
+
+/* 
+ BUTTONS
+ */
+
+
+.add-btn{
+
+background:#28a745;
+
+}
+
+
+.edit-btn{
+
+background:#007bff;
+
+}
+
+
+.delete-btn{
+
+background:#dc3545;
+
+}
+
+
+.view-btn{
+
+background:#17a2b8;
+
+}
+
+
+
+/* 
+ REPORTS
+ */
+
+
+.report-container{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+
+.report-card h2{
+
+font-size:30px;
+
+color:#2874f0;
+
+}
+
+
+
+/*
+ SETTINGS
+ */
+
+
+.settings-container{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+
+.settings-card input{
+
+width:100%;
+
+padding:12px;
+
+margin:10px 0;
+
+}
+
+
+
+/* 
+ MOBILE
+ */
+
+
+@media(max-width:900px){
+
+
+.dashboard-cards{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+
+}
+
+
+@media(max-width:600px){
+
+
+.admin-container{
+
+display:block;
+
+}
+
+
+.dashboard-cards,
+.report-container,
+.settings-container{
+
+grid-template-columns:1fr;
+
+}
+
+
+.admin-content{
+
+padding:15px;
+
+}
+
+
+.admin-table{
+
+display:block;
+
+overflow-x:auto;
+
+}
+
+
+}

@@ -1,49 +1,87 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("");
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    localStorage.setItem("userName", name);
-    localStorage.setItem("role", role);
+  const handleLogin = async () => {
 
-    if (role === "customer") {
-      navigate("/");
-    } else if (role === "admin") {
-      navigate("/admin");
-    } else if (role === "vendor") {
-      navigate("/vendor");
+    const response = await fetch(
+      "http://localhost:9000/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      }
+    );
+
+    if (response.ok) {
+
+      const data = await response.json();
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
+      // Role Based Routing
+
+      if (data.user.role === 1) {
+        navigate("/admin");
+      }
+      else if (data.user.role === 2) {
+        navigate("/vendor");
+      }
+      else {
+        navigate("/");
+      }
+
+    } else {
+      alert("Login Failed");
     }
   };
 
   return (
     <div>
-      <h1>Login Page</h1>
+      <h1>Login</h1>
 
       <input
         type="text"
-        placeholder="Enter Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        placeholder="Username"
+        value={username}
+        onChange={(e)=>setUsername(e.target.value)}
       />
 
       <br /><br />
 
-      <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="">Select Role</option>
-        <option value="customer">Customer</option>
-        <option value="admin">Admin</option>
-        <option value="vendor">Vendor</option>
-      </select>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e)=>setPassword(e.target.value)}
+      />
 
       <br /><br />
 
       <button onClick={handleLogin}>
         Login
       </button>
+
+      <br /><br />
+
+<Link to="/register">
+  New User? Register Here
+</Link>
     </div>
   );
 }
