@@ -41,55 +41,24 @@ export default function SellerRegisterComp(){
         <>
             <h2>Seller Registration</h2>
 
-            <form onSubmit={handleSubmit}>
+           <form onSubmit={handleSubmit} className="seller-form">
 
-                <input
-                    type="text"
-                    name="shop_name"
-                    placeholder="Shop Name"
-                    onChange={handleChange}
-                />
+    <input type="text" name="shop_name" placeholder="Shop Name" onChange={handleChange} />
 
-                <input
-                    type="text"
-                    name="gst_number"
-                    placeholder="GST Number"
-                    onChange={handleChange}
-                />
+    <input type="text" name="gst_number" placeholder="GST Number" onChange={handleChange} />
 
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Username"
-                    onChange={handleChange}
-                />
+    <input type="text" name="username" placeholder="Username" onChange={handleChange} />
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    onChange={handleChange}
-                />
+    <input type="email" name="email" placeholder="Email" onChange={handleChange} />
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    onChange={handleChange}
-                />
+    <input type="password" name="password" placeholder="Password" onChange={handleChange} />
 
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone"
-                    onChange={handleChange}
-                />
+    <input type="text" name="phone" placeholder="Phone" onChange={handleChange} />
 
-                <button type="submit">
-                    Register Seller
-                </button>
+    <button type="submit">Register Seller</button>
 
-            </form>
+</form>
+
         </>
     );
 }

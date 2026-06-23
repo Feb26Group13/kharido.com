@@ -53,53 +53,88 @@ AND u.status='ACTIVE'
     })
 })
 
-app.post('/register/customer' ,function(req,res){
-    
-    let userQuery =`
-    INSERT INTO users
-    (username,email,password,roleid,status)
-    VALUES(?,?,?,3,'ACTIVE')`;
+app.post('/register/customer', function(req,res){
+
+    let checkQuery = `
+    SELECT *
+    FROM users
+    WHERE username = ?
+    OR email = ?
+    `;
 
     con.query(
-        userQuery,[
+        checkQuery,
+        [
             req.body.username,
-            req.body.email,
-            req.body.password
+            req.body.email
         ],
         function(err,result){
-                if(err){
-                console.log(err);
-                return res.status(500).send("User registration failed");
+
+            if(err){
+                return res.status(500).send("Database Error");
             }
 
-            let userid = result.insertId;
+            if(result.length > 0){
+                return res.status(409).send("Username or Email already exists");
+            }
 
-            let profileQuery = `
-            INSERT INTO customer_profiles
-            (userid,firstname,lastname,phone)
-            VALUES(?,?,?,?)`;
+            let userQuery = `
+            INSERT INTO users
+            (username,email,password,roleid,status)
+            VALUES(?,?,?,3,'ACTIVE')
+            `;
 
             con.query(
-                profileQuery,
+                userQuery,
                 [
-                    userid,
-                    req.body.firstname,
-                    req.body.lastname,
-                    req.body.phone
+                    req.body.username,
+                    req.body.email,
+                    req.body.password
                 ],
-                function(err2){
-                    if(err2){
-                        console.log(err2);
-                        return res.status(500).send("profile creation failed");
+                function(err,result){
+
+                    if(err){
+                        return res.status(500).send("User registration failed");
                     }
-                    res.status(201).json({
-                        message:"Customer Resistered Successfully"
-                    });
+
+                    let userid = result.insertId;
+
+                    let profileQuery = `
+                    INSERT INTO customer_profiles
+                    (
+                        userid,
+                        firstname,
+                        lastname,
+                        phone
+                    )
+                    VALUES(?,?,?,?)
+                    `;
+
+                    con.query(
+                        profileQuery,
+                        [
+                            userid,
+                            req.body.firstname,
+                            req.body.lastname,
+                            req.body.phone
+                        ],
+                        function(err2){
+
+                            if(err2){
+                                return res.status(500).send("Profile creation failed");
+                            }
+
+                            res.status(201).json({
+                                message:"Customer Registered Successfully"
+                            });
+
+                        }
+                    );
+
                 }
             );
         }
     );
-    
 });
 
 
@@ -166,7 +201,129 @@ app.post('/register/seller', function(req,res){
     );
 });
 
+//add product route
+app.post('/add-product', function(req,res){
 
+    console.log("Received Product:");
+    console.log(req.body);
+
+    let query = `
+    INSERT INTO products
+    (
+        sellerid,
+        product_name,
+        category,
+        price,
+        description,
+        image_url
+    )
+    VALUES(?,?,?,?,?,?)
+    `;
+    con.query(
+        query,
+        [
+            req.body.sellerid,
+            req.body.product_name,
+            req.body.category,
+            req.body.price,
+            req.body.description,
+            req.body.image_url
+        ],
+        function(err,result){
+
+            if(err){
+                console.log(err);
+                return res.status(500).json({
+                    message:"Product Add Failed"
+                });
+            }
+
+            res.status(201).json({
+                message:"Product Added Successfully"
+            });
+        }
+    );
+});
+
+
+
+
+
+
+
+
+
+app.get('/products',function(req,res){
+
+    let query = `
+    SELECT
+        p.productid,
+        p.product_name,
+        p.description,
+        p.price,
+        p.stock_quantity,
+        b.brand_name,
+        c.category_name
+    FROM products p
+    JOIN brands b
+        ON p.brandid = b.brandid
+    JOIN categories c
+        ON p.categoryid = c.categoryid
+    WHERE p.approval_status='APPROVED'
+    `;
+
+    con.query(query,function(err,result){
+
+        if(err){
+            res.status(500).send(err);
+        }
+        else{
+            res.status(200).json(result);
+        }
+
+    });
+
+});
+
+
+app.get('/product/:id', function(req,res){
+
+    let query = `
+    SELECT
+        p.productid,
+        p.product_name,
+        p.description,
+        p.price,
+        p.stock_quantity,
+        b.brand_name,
+        c.category_name
+    FROM products p
+    JOIN brands b
+        ON p.brandid = b.brandid
+    JOIN categories c
+        ON p.categoryid = c.categoryid
+    WHERE p.productid = ?
+    `;
+
+    con.query(
+        query,
+        [req.params.id],
+        function(err,result){
+
+            if(err){
+                return res.status(500).send(err);
+            }
+
+            if(result.length === 0){
+                return res.status(404).send("Product Not Found");
+            }
+
+            res.status(200).json(result[0]);
+
+        }
+    );
+
+});
 
 app.all('/*splat', function(req,res) {
     res.send("Invalid URL");
