@@ -57,6 +57,9 @@ localStorage.setItem(
     else if (data.user.role === 2) {
         navigate("/seller");
     }
+    else if(data.user.role === 4){
+        navigate("/delivery");
+    }
     else {
         navigate("/user");
     }
