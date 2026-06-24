@@ -201,6 +201,32 @@ app.post('/register/seller', function(req,res){
     );
 });
 
+app.post('/seller/dispatch/:orderid', function(req,res){
+
+    let orderid = req.params.orderid;
+
+    let updateQuery = `
+    UPDATE orders
+    SET order_status='SHIPPED'
+    WHERE orderid=?
+    `;
+
+    con.query(
+        updateQuery,
+        [orderid],
+        function(err){
+
+            if(err){
+                return res.status(500).send(err);
+            }
+
+            res.status(200).send("Order Dispatched");
+
+        }
+    );
+
+});
+
 //add product route
 app.post('/add-product', function(req,res){
 
@@ -323,6 +349,49 @@ app.get('/product/:id', function(req,res){
         }
     );
 
+});
+
+
+app.get('/delivery/orders/:userid', function(req,res){
+
+    let query = `
+    SELECT
+        da.assignmentid,
+        o.orderid,
+        o.total_amount,
+        o.order_status,
+        da.pickup_status,
+        a.city
+
+    FROM delivery_assignments da
+
+    JOIN orders o
+        ON da.orderid = o.orderid
+
+    JOIN delivery_partners dp
+        ON da.deliveryid = dp.deliveryid
+
+    JOIN users u
+        ON dp.userid = u.userid
+
+    JOIN addresses a
+        ON o.addressid = a.addressid
+
+    WHERE u.userid = ?
+    `;
+
+    con.query(
+        query,
+        [req.params.userid],
+        function(err,result){
+
+            if(err){
+                return res.status(500).send(err);
+            }
+
+            res.status(200).json(result);
+        }
+    );
 });
 
 app.all('/*splat', function(req,res) {

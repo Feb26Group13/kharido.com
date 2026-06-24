@@ -20,12 +20,19 @@ import ProductDetails from './components/ProductDetails'
 import UserDashboard from './components/UserDashboard'
 import AdminDashboard from './components/AdminDashboard'
 import SellerDashboard from './components/SellerDashboard'
+import DeliveryDashboard from './components/DeliveryDashboard';
 
 // Seller Sub-Components
 import SellerProducts from './components/SellerProducts'
 import AddProduct from './components/AddProduct'
 import SellerOrders from './components/SellerOrders'
 import SellerProfile from './components/SellerProfile'
+
+//Delivery Components
+import AssignedOrders from './components/AssignedOrders'
+import PickedOrders from './components/PickedOrders';
+import InTransitOrders from './components/InTransitOrders';
+import DeliveredOrders from './components/DeliveredOrders';
 
 function App() {
   return (
@@ -51,7 +58,7 @@ function App() {
             </ProtectedRoutes>
           }
         >
-          <Route path="profile" element={<h1>Profile</h1>} />
+          <Route path="profile" element={<h1>Profile hgkiuo.io.lyug</h1>} />
           <Route path="orders" element={<h1>Orders</h1>} />
           <Route path="wishlist" element={<h1>Wishlist</h1>} />
           <Route path="logout" element={<LogoutComp />} />
@@ -88,6 +95,22 @@ function App() {
           <Route path="orders" element={<SellerOrders />} />
           <Route path="profile" element={<SellerProfile />} />
           <Route path="logout" element={<LogoutComp />} />
+        </Route>
+
+        {/* --- Delivery Routes (Role 4) --- */}
+        <Route
+          path="/delivery"
+          element={
+            <ProtectedRoutes role={4}>
+              <DeliveryDashboard />
+            </ProtectedRoutes>
+          }
+        >
+          <Route path="assigned-orders" element={<AssignedOrders/>}/>
+          <Route path="picked-orders" element={<PickedOrders/>}/>
+          <Route path="in-transit" element={<InTransitOrders/>}/>
+          <Route path="delivered-orders" element={<DeliveredOrders/>}/>
+          <Route path="logout" element={<LogoutComp />}/>
         </Route>
 
         {/* --- 404 Catch-All --- */}
