@@ -1,0 +1,185 @@
+function AdminDashboard(){
+
+return(
+
+<div className="admin-page">
+
+
+<h1>Kharido Admin Dashboard</h1>
+
+
+
+<div className="dashboard-cards">
+
+
+<div className="dashboard-card">
+
+<h3>Total Vendors</h3>
+
+<h2>75</h2>
+
+<p>Registered Vendors</p>
+
+</div>
+
+<div className="dashboard-card">
+
+<h3>Total Users</h3>
+
+<h2>1200</h2>
+
+<p>Registered Users</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Total Products</h3>
+
+<h2>500</h2>
+
+<p>Available Products</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Total Orders</h3>
+
+<h2>350</h2>
+
+<p>Customer Orders</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Revenue</h3>
+
+<h2>₹2,50,000</h2>
+
+<p>Total Sales</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<div className="activity-box">
+
+
+<h2>Recent Activities</h2>
+
+
+
+<table className="admin-table">
+
+
+<thead>
+
+<tr>
+
+<th>Activity</th>
+
+<th>Date</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr>
+
+<td>New customer registered</td>
+
+<td>16 June 2026</td>
+
+<td>
+<span className="status completed">
+Completed
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>New order placed</td>
+
+<td>16 June 2026</td>
+
+<td>
+<span className="status pending">
+Processing
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>Product stock updated</td>
+
+<td>15 June 2026</td>
+
+<td>
+<span className="status completed">
+Updated
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>Vendor added new product</td>
+
+<td>15 June 2026</td>
+
+<td>
+<span className="status completed">
+Added
+</span>
+</td>
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+)
+
+}
+
+
+export default AdminDashboard;
