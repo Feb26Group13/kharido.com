@@ -1,45 +1,185 @@
-import { NavLink, Outlet } from "react-router-dom";
+function AdminDashboard(){
 
-export default function AdminDashBoard() {
-  return (
-    <>
-      <h2>Admin Dashboard</h2>
+return(
 
-      <div className="d-flex">
+<div className="admin-page">
 
-        <ul className="nav nav-pills flex-column p-3 border-end">
 
-          <li className="nav-item">
-            <NavLink to="users">Manage Users</NavLink>
-          </li>
+<h1>Kharido Admin Dashboard</h1>
 
-          <li className="nav-item">
-            <NavLink to="sellers">Manage Sellers</NavLink>
-          </li>
 
-          <li className="nav-item">
-            <NavLink to="products">Manage Products</NavLink>
-          </li>
 
-          <li className="nav-item">
-            <NavLink to="payments">Payments</NavLink>
-          </li>
+<div className="dashboard-cards">
 
-          <li className="nav-item">
-            <NavLink to="refunds">Refunds</NavLink>
-          </li>
 
-          <li className="nav-item">
-            <NavLink to="logout">Logout</NavLink>
-          </li>
+<div className="dashboard-card">
 
-        </ul>
+<h3>Total Vendors</h3>
 
-        <div className="p-3 flex-grow-1">
-          <Outlet />
-        </div>
+<h2>75</h2>
 
-      </div>
-    </>
-  );
+<p>Registered Vendors</p>
+
+</div>
+
+<div className="dashboard-card">
+
+<h3>Total Users</h3>
+
+<h2>1200</h2>
+
+<p>Registered Users</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Total Products</h3>
+
+<h2>500</h2>
+
+<p>Available Products</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Total Orders</h3>
+
+<h2>350</h2>
+
+<p>Customer Orders</p>
+
+</div>
+
+
+
+<div className="dashboard-card">
+
+<h3>Revenue</h3>
+
+<h2>₹2,50,000</h2>
+
+<p>Total Sales</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<div className="activity-box">
+
+
+<h2>Recent Activities</h2>
+
+
+
+<table className="admin-table">
+
+
+<thead>
+
+<tr>
+
+<th>Activity</th>
+
+<th>Date</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+<tr>
+
+<td>New customer registered</td>
+
+<td>16 June 2026</td>
+
+<td>
+<span className="status completed">
+Completed
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>New order placed</td>
+
+<td>16 June 2026</td>
+
+<td>
+<span className="status pending">
+Processing
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>Product stock updated</td>
+
+<td>15 June 2026</td>
+
+<td>
+<span className="status completed">
+Updated
+</span>
+</td>
+
+</tr>
+
+
+
+<tr>
+
+<td>Vendor added new product</td>
+
+<td>15 June 2026</td>
+
+<td>
+<span className="status completed">
+Added
+</span>
+</td>
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+)
+
 }
+
+
+export default AdminDashboard;
