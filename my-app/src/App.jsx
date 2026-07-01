@@ -18,7 +18,7 @@ import ProductDetails from './components/ProductDetails'
 
 // Dashboard Components
 import UserDashboard from './components/UserDashboard'
-import AdminDashboard from './components/AdminDashboard'
+
 import SellerDashboard from './components/SellerDashboard'
 import DeliveryDashboard from './components/DeliveryDashboard';
 
@@ -27,6 +27,16 @@ import SellerProducts from './components/SellerProducts'
 import AddProduct from './components/AddProduct'
 import SellerOrders from './components/SellerOrders'
 import SellerProfile from './components/SellerProfile'
+
+// Admin Sub-Components
+import AdminDashboard from './components/AdminDashboard'
+import AdminOrders from './components/AdminOrders'
+import AdminProducts from './components/AdminProducts' 
+import AdminCustomers from './components/AdminCustomers'
+import AdminVendors from './components/AdminVendors'
+import AdminReports from './components/AdminReports'
+import AdminSettings from './components/AdminSettings'
+import AdminMenu from './components/AdminMenu'
 
 //Delivery Components
 import AssignedOrders from './components/AssignedOrders'
@@ -65,21 +75,25 @@ function App() {
         </Route>
 
         {/* --- Admin Routes (Role 1) --- */}
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoutes role={1}>
-              <AdminDashboard />
-            </ProtectedRoutes>
-          }
-        >
-          <Route path="users" element={<h1>Manage Users</h1>} />
-          <Route path="sellers" element={<h1>Manage Sellers</h1>} />
-          <Route path="products" element={<h1>Manage Products</h1>} />
-          <Route path="payments" element={<h1>Payments</h1>} />
-          <Route path="refunds" element={<h1>Refunds</h1>} />
-          <Route path="logout" element={<LogoutComp />} />
-        </Route>
+       <Route
+  path="/admin"
+  element={
+    <ProtectedRoutes role={1}>
+      <AdminMenu />
+    </ProtectedRoutes>
+  }
+>
+  <Route index element={<AdminDashboard />} />
+
+  <Route path="orders" element={<AdminOrders />} />
+  <Route path="products" element={<AdminProducts />} />
+  <Route path="customers" element={<AdminCustomers />} />
+  <Route path="vendors" element={<AdminVendors />} />
+  <Route path="reports" element={<AdminReports />} />
+  <Route path="settings" element={<AdminSettings />} />
+
+  <Route path="logout" element={<LogoutComp />} />
+</Route>
 
         {/* --- Seller Routes (Role 2) --- */}
         <Route
