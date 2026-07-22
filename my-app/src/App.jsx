@@ -1,6 +1,9 @@
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
+// Navbar
+ import Navbar from './components/Navbar'
+
 // Layout & Route Guards
 import ProtectedRoutes from './components/ProtectedRoutes'
 
@@ -10,6 +13,7 @@ import LoginComp from './components/LoginComp'
 import RegisterChoice from './components/RegisterChoice'
 import CustomerRegisterComp from './components/CustomerRegisterComp'
 import SellerRegisterComp from './components/SellerRegisterComp'
+import AdminRegisterComp from './components/AdminRegisterComp'
 import LogoutComp from './components/Logout'
 
 // Product Components
@@ -52,9 +56,9 @@ function App() {
         <Route path="/" element={<HomeComp />} />
         <Route path="/login" element={<LoginComp />} />
         <Route path="/register" element={<RegisterChoice />} />
-        <Route path="/register/customer" element={<CustomerRegisterComp />} />
+        <Route path="/register/user" element={<CustomerRegisterComp />} />
         <Route path="/register/seller" element={<SellerRegisterComp />} />
-
+        <Route path="/register/admin" element={<AdminRegisterComp />} />
         {/* --- Product Routes --- */}
         <Route path="/products" element={<ProductList />} />
         <Route path="/product/:id" element={<ProductDetails />} />

@@ -1,36 +1,22 @@
-import {NavLink, Outlet} from "react-router-dom"
-export default function HomeComp(){
-    return(
-        <>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light px-3">
-         <div className="container-fluid">
-          <span className="navbar-brand">My App</span>
+import Navbar from "../components/Navbar";
+import Hero from "../components/Hero";
+import Categories from "../components/Categories";
+import Deals from "../components/Deals";
+import Products from "../components/Products";
+import Footer from "../components/Footer";
 
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-            </li>
-
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/register">
-                Register
-              </NavLink>
-            </li>
-           </ul>
-          </div>
-        </nav>
-
-        <div className="container mt-4">
-          <h1>Welcome to Home Page</h1>
-          <Outlet />
-        </div>
-     
-   once click on login logincomp should be visible
-
-                 register registercomp should be visible
-
-        </>
-    )
+function HomeComp() {
+  return (
+    <>
+      <Navbar />
+      <Hero />
+      <Categories />
+      <Deals />
+      <Products />
+      <Footer />
+      
+    </>
+  );
 }
+
+export default HomeComp;
