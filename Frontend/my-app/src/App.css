@@ -183,63 +183,721 @@
   }
 }
 
-/* //seller dashboard css */
-
-.seller-form{
-    width: 400px;
-    margin: 30px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.seller-form input{
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+body {
+  font-family: Arial, sans-serif;
 }
 
-.seller-form button{
-    padding: 12px;
-    font-size: 16px;
-    cursor: pointer;
-}
+/* Navbar */
 
-/* Seller Dashboard */
-
-.dashboard-container{
+.navbar {
   display: flex;
-  min-height: 100vh;
+  justify-content: space-between;
+  align-items: center;
+  background: #2874f0;
+  color: white;
+  padding: 15px 40px;
 }
 
-nav{
-  width: 250px;
-  background-color: #1f2937;
+.navbar ul {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+}
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.navbar a:hover {
+  color: yellow;
+}
+
+.navbar button {
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Hero */
+
+.hero {
+  text-align: center;
+  padding: 80px;
+  background: #f5f5f5;
+}
+
+.hero h1 {
+  font-size: 40px;
+}
+
+.hero p {
+  margin: 20px 0;
+}
+
+.hero button {
+  padding: 12px 20px;
+  background: #2874f0;
+  color: white;
+  border: none;
+}
+
+/* Categories */
+
+.categories {
+  padding: 40px;
+}
+
+.category-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.category-card {
+  background: #eee;
   padding: 20px;
+  flex: 1;
+  text-align: center;
+  border-radius: 10px;
+}
+
+/* Products */
+
+.products {
+  padding: 40px;
+}
+
+.product-container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  flex: 1;
+  text-align: center;
+}
+
+.product-card button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: green;
+  color: white;
+  border: none;
+}
+
+/* Footer */
+
+.footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.section {
+  padding: 40px;
+}
+
+/* Deals */
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+/* 
+   ADMIN LAYOUT
+ */
+
+
+.admin-container{
+
+display:flex;
+
+min-height:100vh;
+
+}
+
+
+.sidebar{
+
+width:240px;
+
+background:#1e1e2f;
+
+color:white;
+
+padding:20px;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+
+
+.sidebar h2{
+
+text-align:center;
+
+font-size:28px;
+
+}
+
+
+
+.sidebar a{
+
+color:white;
+
+text-decoration:none;
+
+padding:14px;
+
+margin:5px 0;
+
+border-radius:8px;
+
+}
+
+
+
+.sidebar a:hover,
+.sidebar a.active{
+
+background:#2874f0;
+
+}
+
+
+
+.admin-content{
+
+flex:1;
+
+padding:30px;
+
+background:#f5f6fa;
+
+}
+
+
+/* 
+ DASHBOARD CARDS
+   */
+
+
+.dashboard-cards{
+
+display:grid;
+
+grid-template-columns:repeat(5,1fr);
+
+gap:20px;
+
+}
+
+
+
+.dashboard-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:12px;
+
+text-align:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+
+
+.dashboard-card h2{
+
+font-size:32px;
+
+color:#2874f0;
+
+}
+
+
+/* 
+ TABLE COMMON
+ */
+
+
+.admin-table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+}
+
+
+
+.admin-table th{
+
+background:#2874f0;
+
+color:white;
+
+padding:15px;
+
+}
+
+
+
+.admin-table td{
+
+padding:15px;
+
+border-bottom:1px solid #ddd;
+
+}
+
+
+
+.admin-table tr:hover{
+
+background:#f5f5f5;
+
+}
+
+
+/* 
+ ORDERS
+ */
+
+
+.orders-box,
+.product-admin-box,
+.customer-box,
+.activity-box,
+.settings-card,
+.report-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:12px;
+
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+
+}
+
+
+
+/* 
+ BUTTONS
+ */
+
+
+.add-btn{
+
+background:#28a745;
+
+}
+
+
+.edit-btn{
+
+background:#007bff;
+
+}
+
+
+.delete-btn{
+
+background:#dc3545;
+
+}
+
+
+.view-btn{
+
+background:#17a2b8;
+
+}
+
+
+
+/* 
+ REPORTS
+ */
+
+
+.report-container{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+
+.report-card h2{
+
+font-size:30px;
+
+color:#2874f0;
+
+}
+
+
+
+/*
+ SETTINGS
+ */
+
+
+.settings-container{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+}
+
+
+.settings-card input{
+
+width:100%;
+
+padding:12px;
+
+margin:10px 0;
+
+}
+
+
+
+/* 
+ MOBILE
+ */
+
+
+@media(max-width:900px){
+
+
+.dashboard-cards{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+
+}
+
+
+@media(max-width:600px){
+
+
+.admin-container{
+
+display:block;
+
+}
+
+
+.dashboard-cards,
+.report-container,
+.settings-container{
+
+grid-template-columns:1fr;
+
+}
+
+
+.admin-content{
+
+padding:15px;
+
+}
+
+
+.admin-table{
+
+display:block;
+
+overflow-x:auto;
+
+}
+
+
+}
+
+/* Seller Registration Page */
+.seller-form {
+  width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
-nav a{
-  text-decoration: none;
-  color: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 5px;
+/* Heading */
+.seller-form + * {
+  margin-top: 10px;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 30px;
+  color: #333;
+}
+
+/* Input Fields */
+.seller-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
   transition: 0.3s;
 }
 
-nav a:hover{
-  background-color: #374151;
+/* Input Focus */
+.seller-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
 }
 
-.content{
-  flex: 1;
-  padding: 30px;
+/* Register Button */
+.seller-form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Button Hover */
+.seller-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Mobile Responsive */
+@media (max-width: 500px) {
+  .seller-form {
+    width: 90%;
+    padding: 20px;
+  }
+}
+/* Registration Page */
+
+.register-container {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
   background-color: #f5f5f5;
 }
 
-.content h1{
+.register-container h2 {
+  margin-bottom: 20px;
   color: #333;
+  font-size: 28px;
+}
+
+/* Registration Form */
+
+.register-form {
+  width: 400px;
+  max-width: 100%;
+  padding: 30px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  box-sizing: border-box;
+}
+
+/* Input Fields */
+
+.register-form input {
+  width: 100%;
+  padding: 12px 15px;
+  box-sizing: border-box;
+
+  border: 1px solid #ccc;
+  border-radius: 6px;
+
+  font-size: 15px;
+  outline: none;
+}
+
+/* Input Focus */
+
+.register-form input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Buttons */
+
+.register-form button {
+  width: 100%;
+  padding: 12px;
+
+  background-color: #007bff;
+  color: white;
+
+  border: none;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Button Hover */
+
+.register-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 500px) {
+  .register-container {
+    padding: 20px;
+  }
+
+  .register-form {
+    width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Registration Choice Page */
+
+.register-choice {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px 20px;
+  background-color: #f5f5f5;
+}
+
+.register-choice h1 {
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* Registration Buttons */
+
+.register-choice button {
+  width: 250px;
+  padding: 13px 20px;
+
+  background-color: #007bff;
+  color: white;
+
+  border: none;
+  border-radius: 6px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover Effect */
+
+.register-choice button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Remove default Link styling */
+
+.register-choice a {
+  text-decoration: none;
+}
+
+/* Mobile Responsive */
+
+@media (max-width: 500px) {
+
+  .register-choice {
+    padding: 20px;
+  }
+
+  .register-choice h1 {
+    font-size: 24px;
+  }
+
+  .register-choice button {
+    width: 220px;
+  }
 }
