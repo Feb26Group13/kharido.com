@@ -1,0 +1,21 @@
+Admin Dashboard
+├── Manage Users
+├── Manage Sellers
+├── Approve Sellers
+├── Approve Products
+├── View Orders
+├── View Payments
+├── View Refunds
+
+Seller Dashboard
+├── Add Product
+├── Update Product
+├── Delete Product
+├── View Orders
+
+Customer Dashboard
+├── Browse Products
+├── Cart
+├── Wishlist
+├── Orders
+├── Profile
