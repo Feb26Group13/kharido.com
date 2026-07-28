@@ -1,0 +1,36 @@
+Relatioship diagram
+
+roles
+  |
+users
+  |---------customer_profiles
+  |
+  |---------seller_profiles
+  |
+  |---------addresses
+  |
+  |---------carts
+  |             |
+  |             +---cart_items---products
+  |
+  |---------orders
+  |             |
+  |             +---order_items---products
+  |
+  |---------reviews
+  |
+  |---------wishlist
+  |
+  |---------notifications
+
+categories
+   |
+subcategories
+   |
+products ----- brands
+   |
+product_images
+
+orders ---- payments
+
+users ---- activity_logs
