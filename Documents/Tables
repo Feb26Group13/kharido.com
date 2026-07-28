@@ -1,0 +1,22 @@
+Database tables
+
+1. roles
+2. users
+3. customer_profiles
+4. seller_profiles
+5. addresses
+6. categories
+7. subcategories
+8. brands
+9. products
+10. product_images
+11. carts
+12. cart_items
+13. orders
+14. order_items
+15. payments
+16. reviews
+17. wishlist
+18. coupons
+19. notifications
+20. activity_logs

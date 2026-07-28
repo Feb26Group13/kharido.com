@@ -1,0 +1,26 @@
+# Root workspace metadata
+/.metadata/
+
+# Spring Boot Backend workspace metadata
+Spring-Boot-Backend/.metadata/
+
+# Build output
+Spring-Boot-Backend/bin/
+Spring-Boot-Backend/target/
+Spring-Boot-Backend/.settings/
+Spring-Boot-Backend/.factorypath
+# Eclipse
+.metadata/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Java
+target/
+
+# Node
+node_modules/
