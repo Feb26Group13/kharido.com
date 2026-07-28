@@ -3,42 +3,48 @@ package com.example.demo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
+
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
             .authorizeHttpRequests(auth -> auth
 
                 // Customer APIs
-                .requestMatchers("/api/customers/register").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/customers/register").permitAll()
+
+                // Customer Login
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
 
                 // Seller APIs
-                .requestMatchers(HttpMethod.POST,
-                        "/seller/register",
-                        "/seller/login").permitAll()
-
+                .requestMatchers(HttpMethod.POST, "/seller/register", "/seller/login").permitAll()
                 .requestMatchers("/seller/test").permitAll()
 
-                // All other APIs require authentication
+                // Secure all other APIs
                 .anyRequest().authenticated()
-            )
-            .httpBasic(Customizer.withDefaults());
+            );
 
         return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }
