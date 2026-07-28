@@ -1,5 +1,9 @@
 package com.example.demo.enums;
 
-public class AccountStatus {
+public enum AccountStatus {
+
+    ACTIVE,
+    INACTIVE,
+    BLOCKED
 
 }

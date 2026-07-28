@@ -1,5 +1,10 @@
 package com.example.demo.service;
 
-public class UserService {
+import com.example.demo.dto.request.CustomerRegistrationRequest;
+import com.example.demo.dto.response.RegistrationResponse;
+
+public interface UserService {
+
+    RegistrationResponse registerCustomer(CustomerRegistrationRequest request);
 
 }

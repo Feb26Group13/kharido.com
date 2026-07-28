@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.entity.User;
+import com.example.demo.enums.AccountStatus;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtService;
 import com.example.demo.service.AuthService;
@@ -59,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // Check account status
-        if (!"ACTIVE".equals(user.getStatus())) {
+        if (user.getStatus() != AccountStatus.ACTIVE) {
 
             return new LoginResponse(
                     "User account is not active",
