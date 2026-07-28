@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,23 +20,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
 
             .sessionManagement(session ->
-                session.sessionCreationPolicy(
-                    SessionCreationPolicy.STATELESS
-                )
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login","/api/customers/register")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+
+                // Customer APIs
+                .requestMatchers(HttpMethod.POST, "/api/customers/register").permitAll()
+
+                // Customer Login
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+
+                // Seller APIs
+                .requestMatchers(HttpMethod.POST, "/seller/register", "/seller/login").permitAll()
+                .requestMatchers("/seller/test").permitAll()
+
+                // Secure all other APIs
+                .anyRequest().authenticated()
             );
 
         return http.build();
