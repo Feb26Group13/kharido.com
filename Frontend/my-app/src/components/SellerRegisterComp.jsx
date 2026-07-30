@@ -22,7 +22,7 @@ export default function SellerRegisterComp(){
         e.preventDefault();
 
         fetch(
-            "http://localhost:3000/register/seller",
+            "http://localhost:8081/seller/register",
             {
                 method:"POST",
                 headers:{

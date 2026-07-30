@@ -8,7 +8,9 @@ export default function CustomerRegisterComp(){
         username:"",
         email:"",
         password:"",
-        phone:""
+        phone:"",
+        dob:"",
+        gender:""
     });
 
     const handleChange = (e)=>{
@@ -20,9 +22,10 @@ export default function CustomerRegisterComp(){
 
     const handleSubmit = (e)=>{
         e.preventDefault();
-
+        console.log(form);
+        
         fetch(
-            "http://localhost:3000/register/customer",
+            "http://localhost:8081/api/customers/register",
             {
                 method:"POST",
                 headers:{
@@ -82,6 +85,19 @@ export default function CustomerRegisterComp(){
                     type="text"
                     name="phone"
                     placeholder="Mobile"
+                    onChange={handleChange}
+                />
+
+                <input
+                    type="date"
+                    name="dob"
+                    onChange={handleChange}
+                />
+
+                <input
+                    type="text"
+                    name="gender"
+                    placeholder="Gender"
                     onChange={handleChange}
                 />
 
