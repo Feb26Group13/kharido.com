@@ -27,7 +27,7 @@ function AdminDashboard() {
         }
 
         // Call protected Admin API
-        fetch("http://localhost:8080/api/admin/auth/test", {
+        fetch("http://localhost:8081/api/admin/auth/test", {
             method: "GET",
 
             headers: {

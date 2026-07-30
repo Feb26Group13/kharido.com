@@ -5,182 +5,143 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginComp() {
 
-const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
-const [msg, setMsg] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [msg, setMsg] = useState("");
 
-const navigate = useNavigate();
-const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
 
-    e.preventDefault();
-    setMsg("");
+        e.preventDefault();
+        setMsg("");
 
-    try {
-
-        // Call Spring Boot Login API
-        const response = await fetch(
-            "http://localhost:8081/api/auth/login",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                },
-
-                body: JSON.stringify({
-                    username: username,
-                    password: password,
-                }),
-            }
-        );
-
-        // Get response from Spring Boot
-        const data = await response.json();
-
-        console.log("Spring Boot Response:", data);
-
-        // Check login response
-        if (!response.ok) {
-
-            setMsg(
-                data.message ||
-                "Invalid username or password"
+        try {
+            const response = await fetch(
+                "http://localhost:8081/api/auth/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password,
+                    }),
+                }
             );
 
-            return;
+            const data = await response.json();
+
+            console.log("Spring Boot Response:", data);
+
+            // Login failed
+            if (!data.token) {
+                setMsg(data.message || "Invalid username or password");
+                return;
+            }
+
+            const userData = {
+                username: data.username,
+                role: data.role,
+            };
+
+            dispatch(
+                login({
+                    token: data.token,
+                    user: userData,
+                })
+            );
+
+            localStorage.setItem(
+                "auth",
+                JSON.stringify({
+                    token: data.token,
+                    user: userData,
+                })
+            );
+
+            console.log("JWT Token Saved:", data.token);
+
+            switch (data.role) {
+
+                case "ADMIN":
+                    navigate("/admin");
+                    break;
+
+                case "SELLER":
+                    navigate("/seller");
+                    break;
+
+                case "CUSTOMER":
+                    navigate("/user");
+                    break;
+
+                case "DELIVERY":
+                    navigate("/delivery");
+                    break;
+
+                default:
+                    setMsg("Invalid user role: " + data.role);
+                    break;
+            }
+
+        } catch (error) {
+
+            console.error("Login Error:", error);
+
+            setMsg(
+                "Unable to connect to Spring Boot Backend. Make sure Spring Boot is running on port 8081."
+            );
         }
+    };
 
-        // =====================================
-        // Create user information
-        // =====================================
+    return (
+        <div>
 
-        const userData = {
-            username: data.username,
-            role: data.role,
-        };
+            <h1>Login Form</h1>
 
-        // =====================================
-        // Save login information in Redux
-        // =====================================
+            <form onSubmit={handleSubmit}>
 
-        dispatch(
-            login({
-                token: data.token,
-                user: userData,
-            })
-        );
+                <label>Enter Username:</label>
+                <br />
 
-        // =====================================
-        // Save JWT + User information
-        // in localStorage
-        // =====================================
+                <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
 
-        localStorage.setItem(
-            "auth",
-            JSON.stringify({
-                token: data.token,
-                user: userData,
-            })
-        );
+                <br />
+                <br />
 
-        console.log("JWT Token Saved:", data.token);
+                <label>Enter Password:</label>
+                <br />
 
-        // =====================================
-        // Redirect according to user role
-        // =====================================
+                <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
 
-        if (data.role === "ADMIN") {
+                <br />
+                <br />
 
-            navigate("/admin");
+                <button type="submit">
+                    LOGIN
+                </button>
 
-        } else if (data.role === "VENDOR") {
+            </form>
 
-            navigate("/seller");
+            {msg && (
+                <p style={{ color: "red" }}>
+                    {msg}
+                </p>
+            )}
 
-        } else if (data.role === "CUSTOMER") {
-
-            navigate("/user");
-
-        } else if (data.role === "DELIVERY") {
-
-            navigate("/delivery");
-
-        } else {
-
-            setMsg("Invalid user role");
-        }
-
-    } catch (error) {
-
-        console.error("Login Error:", error);
-
-        setMsg(
-            "Unable to connect to Spring Boot Backend. " +
-            "Make sure Spring Boot is running on port 8081."
-        );
-    }
-};
-
-
-return (
-    <div>
-
-        <h1>Login Form</h1>
-
-        <form onSubmit={handleSubmit}>
-
-            <label>
-                Enter Username:
-            </label>
-
-            <br />
-
-            <input
-                type="text"
-                name="username"
-                value={username}
-                onChange={(e) =>
-                    setUsername(e.target.value)
-                }
-                required
-            />
-
-            <br />
-            <br />
-
-            <label>
-                Enter Password:
-            </label>
-
-            <br />
-
-            <input
-                type="password"
-                name="password"
-                value={password}
-                onChange={(e) =>
-                    setPassword(e.target.value)
-                }
-                required
-            />
-
-            <br />
-            <br />
-
-            <button type="submit">
-                LOGIN
-            </button>
-
-        </form>
-
-        {msg && (
-            <p>
-                {msg}
-            </p>
-        )}
-
-    </div>
-);
+        </div>
+    );
 }

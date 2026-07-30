@@ -22,5 +22,35 @@ Spring-Boot-Backend/.factorypath
 # Java
 target/
 
+<<<<<<< Updated upstream
 # Node
 node_modules/
+=======
+############################
+# Node.js
+############################
+**/node_modules/
+**/dist/
+**/build/
+
+############################
+# Environment Files
+############################
+.env
+.env.*
+
+############################
+# Operating System Files
+############################
+.DS_Store
+Thumbs.db
+
+*.classpath
+*.factorypath
+*.settings/
+*.project
+
+
+Backend/auth-service/bin/
+Backend/business-service/bin/
+>>>>>>> Stashed changes
