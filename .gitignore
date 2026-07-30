@@ -1,31 +1,26 @@
-# Root workspace metadata
-/.metadata/
-
-# Spring Boot Backend workspace metadata
-Spring-Boot-Backend/.metadata/
-
-# Build output
-Spring-Boot-Backend/bin/
-Spring-Boot-Backend/target/
-Spring-Boot-Backend/.settings/
-Spring-Boot-Backend/.factorypath
-# Eclipse
+############################
+# Eclipse Workspace
+############################
 .metadata/
 
-# IntelliJ
+############################
+# IntelliJ IDEA
+############################
 .idea/
 *.iml
 
+############################
 # VS Code
+############################
 .vscode/
 
-# Java
-target/
+############################
+# Maven / Java
+############################
+**/target/
+*.class
+*.log
 
-<<<<<<< Updated upstream
-# Node
-node_modules/
-=======
 ############################
 # Node.js
 ############################
@@ -39,18 +34,11 @@ node_modules/
 .env
 .env.*
 
+# Node
+node_modules/
 ############################
 # Operating System Files
 ############################
 .DS_Store
+=======
 Thumbs.db
-
-*.classpath
-*.factorypath
-*.settings/
-*.project
-
-
-Backend/auth-service/bin/
-Backend/business-service/bin/
->>>>>>> Stashed changes
