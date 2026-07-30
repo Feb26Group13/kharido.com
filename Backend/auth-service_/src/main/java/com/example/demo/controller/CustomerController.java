@@ -19,6 +19,8 @@ public class CustomerController {
     public RegistrationResponse registerCustomer(
             @RequestBody CustomerRegistrationRequest request) {
 
+        System.out.println("===== CustomerController reached =====");
+
         return userService.registerCustomer(request);
     }
 }
