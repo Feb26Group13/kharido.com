@@ -40,5 +40,13 @@ node_modules/
 # Operating System Files
 ############################
 .DS_Store
-=======
 Thumbs.db
+
+*.classpath
+*.factorypath
+*.settings/
+*.project
+
+
+Backend/auth-service/bin/
+Backend/business-service/bin/
