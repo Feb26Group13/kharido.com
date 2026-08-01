@@ -11,6 +11,10 @@ function ProtectedRoutes({ children, role }) {
 
     const auth = JSON.parse(authData);
 
+    if (!auth.user) {
+        return <Navigate to="/login" replace />;
+    }
+
     // Get logged-in user's role
     const userRole = auth.user?.role;
 
