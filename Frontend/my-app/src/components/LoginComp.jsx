@@ -80,6 +80,16 @@ export default function LoginComp() {
         })
       );
 
+      if (data.role === "DELIVERY_PARTNER" && data.partnerId) {
+        localStorage.setItem("partnerId", String(data.partnerId));
+        localStorage.setItem("partnerCity", data.partnerCity || "");
+        localStorage.setItem("partnerCompany", data.partnerCompany || "");
+        console.log("✅ Partner ID saved:", data.partnerId);
+      }
+
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("role", data.role);
+
       switch (data.role) {
         case "ADMIN":
           navigate("/admin");
@@ -93,7 +103,7 @@ export default function LoginComp() {
           navigate("/user");
           break;
 
-        case "DELIVERY":
+        case "DELIVERY_PARTNER":
           navigate("/delivery");
           break;
 
