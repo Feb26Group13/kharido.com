@@ -24,7 +24,8 @@ import UserDashboard from './components/UserDashboard'
 import SellerDashboard from './components/SellerDashboard'
 
 // Delivery Dashboard
-import DeliveryDashboard from './components/DeliveryDashboard'
+import DeliveryDashboard from './pages/delivery/DeliveryDashboard'
+import DeliveryDetails from './pages/delivery/DeliveryDetails'
 
 // Seller Sub-Components
 import SellerProducts from './components/SellerProducts'
@@ -259,49 +260,26 @@ function App() {
 
         {/* =====================================================
             DELIVERY ROUTES
-            Role: DELIVERY
+            Role: DELIVERY_PARTNER
         ====================================================== */}
 
         <Route
           path="/delivery"
           element={
-            <ProtectedRoutes role="DELIVERY">
+            <ProtectedRoutes role="DELIVERY_PARTNER">
               <DeliveryDashboard />
             </ProtectedRoutes>
           }
-        >
+        />
 
-          {/* /delivery/assigned-orders */}
-          <Route
-            path="assigned-orders"
-            element={<AssignedOrders />}
-          />
-
-          {/* /delivery/picked-orders */}
-          <Route
-            path="picked-orders"
-            element={<PickedOrders />}
-          />
-
-          {/* /delivery/in-transit */}
-          <Route
-            path="in-transit"
-            element={<InTransitOrders />}
-          />
-
-          {/* /delivery/delivered-orders */}
-          <Route
-            path="delivered-orders"
-            element={<DeliveredOrders />}
-          />
-
-          {/* /delivery/logout */}
-          <Route
-            path="logout"
-            element={<LogoutComp />}
-          />
-
-        </Route>
+        <Route
+          path="/delivery/order/:orderId"
+          element={
+            <ProtectedRoutes role="DELIVERY_PARTNER">
+              <DeliveryDetails />
+            </ProtectedRoutes>
+          }
+        />
 
 
         {/* =====================================================

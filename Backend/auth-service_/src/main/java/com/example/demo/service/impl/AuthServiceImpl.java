@@ -1,38 +1,55 @@
 package com.example.demo.service.impl;
 
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.request.LoginRequest;
 import com.example.demo.entity.User;
-import com.example.demo.security.CustomUserDetails;
+import com.example.demo.enums.AccountStatus;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public AuthServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User login(LoginRequest request) {
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                request.getUsername(),
-                                request.getPassword()
-                        )
-                );
+        // Find user by username
+        User user = userRepository
+                .findByUsername(request.getUsername())
+                .orElse(null);
 
-        CustomUserDetails userDetails =
-                (CustomUserDetails) authentication.getPrincipal();
+        // User not found
+        if (user == null) {
+            return null;
+        }
 
-        return userDetails.getUser();
+        // Check encrypted password
+        if (!passwordEncoder.matches(
+                request.getPassword(),
+                user.getPassword())) {
+
+            return null;
+        }
+
+        // Check account status
+        if (user.getStatus() != AccountStatus.ACTIVE) {
+            return null;
+        }
+
+        // Login successful - returns User only
+        return user;
     }
 }

@@ -115,7 +115,7 @@ public class SecurityConfig {
                         // ---------------- DELIVERY ----------------
 
                         .requestMatchers("/api/delivery/**")
-                        .hasRole("DELIVERY")
+                        .hasRole("DELIVERY_PARTNER")
 
                         .anyRequest()
                         .authenticated());
