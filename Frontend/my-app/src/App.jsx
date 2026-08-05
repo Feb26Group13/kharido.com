@@ -15,6 +15,8 @@ import LogoutComp from './components/Logout'
 import TermsConditions from './components/TermsConditions'
 import PrivacyPolicy from './components/PrivacyPolicy'
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 // Product Components
 import ProductList from './components/ProductList'
 import ProductDetails from './components/ProductDetails'
@@ -62,6 +64,7 @@ import InTransitOrders from './components/InTransitOrders'
 import DeliveredOrders from './components/DeliveredOrders'
 import { CartProvider } from "./customer/context/CartContext";
 import { WishlistProvider } from "./customer/context/WishlistContext";
+import SellerHome from './components/SellerHome.jsx'
 
 function App() {
 
@@ -256,47 +259,58 @@ function App() {
             SELLER / VENDOR ROUTES
             Role: VENDOR
         ====================================================== */}
+<Route
+  path="/seller"
+  element={
+    <ProtectedRoutes role="SELLER">
+      <SellerDashboard />
+    </ProtectedRoutes>
+  }
+>
 
-        <Route
-          path="/seller"
-          element={
-            <ProtectedRoutes role="SELLER">
-              <SellerDashboard />
-            </ProtectedRoutes>
-          }
-        >
+  {/* Default Seller Dashboard */}
+  <Route
+    index
+    element={<SellerHome />}
+  />
 
-          {/* /seller/products */}
-          <Route
-            path="products"
-            element={<SellerProducts />}
-          />
+  {/* /seller/dashboard */}
+  <Route
+    path="dashboard"
+    element={<SellerHome />}
+  />
 
-          {/* /seller/add-product */}
-          <Route
-            path="add-product"
-            element={<AddProduct />}
-          />
+  {/* /seller/products */}
+  <Route
+    path="products"
+    element={<SellerProducts />}
+  />
 
-          {/* /seller/orders */}
-          <Route
-            path="orders"
-            element={<SellerOrders />}
-          />
+  {/* /seller/add-product */}
+  <Route
+    path="add-product"
+    element={<AddProduct />}
+  />
 
-          {/* /seller/profile */}
-          <Route
-            path="profile"
-            element={<SellerProfile />}
-          />
+  {/* /seller/orders */}
+  <Route
+    path="orders"
+    element={<SellerOrders />}
+  />
 
-          {/* /seller/logout */}
-          <Route
-            path="logout"
-            element={<LogoutComp />}
-          />
+  {/* /seller/profile */}
+  <Route
+    path="profile"
+    element={<SellerProfile />}
+  />
 
-        </Route>
+  {/* /seller/logout */}
+  <Route
+    path="logout"
+    element={<LogoutComp />}
+  />
+
+</Route>
 
 
         {/* =====================================================
