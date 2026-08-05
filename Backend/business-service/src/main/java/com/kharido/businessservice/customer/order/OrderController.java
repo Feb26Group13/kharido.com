@@ -60,5 +60,39 @@ public class OrderController {
                         authentication.getName(),
                         orderId));
     }
+    
+    
+    @PostMapping("/{orderId}/payment-success")
+    public ResponseEntity<String> paymentSuccess(
+            @PathVariable Integer orderId) {
+
+        return ResponseEntity.ok(
+                orderService.paymentSuccess(orderId));
+    }
+
+    @PostMapping("/{orderId}/payment-failed")
+    public ResponseEntity<String> paymentFailed(
+            @PathVariable Integer orderId) {
+
+        return ResponseEntity.ok(
+                orderService.paymentFailed(orderId));
+    }
+
+    @GetMapping("/{orderId}/tracking")
+    public ResponseEntity<List<OrderTrackingResponse>> getTracking(
+            @PathVariable Integer orderId) {
+
+        return ResponseEntity.ok(
+                orderService.getTracking(orderId));
+    }
+
+    @PostMapping("/{orderId}/tracking")
+    public ResponseEntity<OrderTrackingResponse> addTrackingEvent(
+            @PathVariable Integer orderId,
+            @RequestBody UpdateTrackingRequest request) {
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(orderService.addTrackingEvent(orderId, request));
+    }
 
 }

@@ -12,6 +12,11 @@ import com.kharido.businessservice.common.repository.UserRepository;
 import com.kharido.businessservice.customer.product.Product;
 import com.kharido.businessservice.customer.product.ProductRepository;
 
+import com.kharido.businessservice.customer.product.brand.Brand;
+import com.kharido.businessservice.customer.product.brand.BrandRepository;
+import com.kharido.businessservice.customer.product.image.ProductImage;
+import com.kharido.businessservice.customer.product.image.ProductImageRepository;
+
 @Service
 @Transactional
 public class CartServiceImpl implements CartService {
@@ -20,17 +25,23 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final BrandRepository brandRepository;
+    private final ProductImageRepository productImageRepository;
 
     public CartServiceImpl(
             CartRepository cartRepository,
             CartItemRepository cartItemRepository,
             ProductRepository productRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            BrandRepository brandRepository,
+            ProductImageRepository productImageRepository) {
 
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.brandRepository = brandRepository;
+        this.productImageRepository = productImageRepository;
     }
 
     @Override
@@ -100,9 +111,18 @@ public class CartServiceImpl implements CartService {
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
 
-        Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() ->
-                        new RuntimeException("Cart not found"));
+        Cart cart = cartRepository.findByUser(user).orElse(null);
+
+        if (cart == null) {
+
+            CartResponse response = new CartResponse();
+
+            response.setUserId(user.getUserId());
+            response.setItems(new ArrayList<>());
+            response.setTotalAmount(BigDecimal.ZERO);
+
+            return response;
+        }
 
         CartResponse response = new CartResponse();
 
@@ -118,12 +138,34 @@ public class CartServiceImpl implements CartService {
         BigDecimal total = BigDecimal.ZERO;
 
         for (CartItem item : cartItems) {
+        	
+        	Brand brand =
+        	        brandRepository
+        	                .findById(item.getProduct().getBrandId())
+        	                .orElse(null);
+
+        	ProductImage image =
+        	        productImageRepository
+        	                .findFirstByProductProductIdAndIsPrimaryTrue(
+        	                        item.getProduct().getProductId())
+        	                .orElse(null);
 
             CartItemResponse dto = new CartItemResponse();
 
             dto.setCartItemId(item.getCartItemId());
             dto.setProductId(item.getProduct().getProductId());
             dto.setProductName(item.getProduct().getProductName());
+            
+            dto.setBrand(
+                    brand != null
+                            ? brand.getBrandName()
+                            : "");
+
+            dto.setImageUrl(
+                    image != null
+                            ? image.getImageUrl()
+                            : null);
+            
             dto.setPrice(item.getPrice());
             dto.setQuantity(item.getQuantity());
 

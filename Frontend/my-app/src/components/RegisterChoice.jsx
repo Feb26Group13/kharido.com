@@ -1,236 +1,308 @@
-// import { Link } from "react-router-dom";
-
-// export default function RegisterChoice() {
-//     return (
-//        <div className="register-choice">
-//             <h1>Select Registration Type</h1>
-
-//             <Link to="/register/user">
-//                 <button>User Registration</button>
-//             </Link>
-
-//             <br /><br />
-
-//             <Link to="/register/seller">
-//                 <button>Seller Registration</button>
-//             </Link>
-
-//             <br /><br />
-
-//             <Link to="/register/admin">
-//                 <button>Admin Registration</button>
-//             </Link>
-//        </div>
-//     );
-// }
-
 import { Link } from "react-router-dom";
-
 import {
   Box,
   Button,
   Card,
-  CardContent,
   Container,
-  Grid,
   Typography,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
 import StoreIcon from "@mui/icons-material/Store";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import logo from "../assets/logo.png";
 
 export default function RegisterChoice() {
+  const customerBenefits = [
+    "Fast & Reliable Delivery",
+    "100% Secure Payments",
+    "Wishlist & Easy Cart",
+    "Hassle-Free Returns"
+  ];
+
+  const sellerBenefits = [
+    "Reach Thousands of Buyers",
+    "Easy Product Management",
+    "Real-time Order Tracking",
+    "Fast & Secure Payouts"
+  ];
+
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #F5F7FA 0%, #E6F7F5 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        py: { xs: 5, md: 8 },
+        px: { xs: 2, md: 4 }
+      }}
+    >
+      <Container maxWidth="lg">
+        {/* Main Card Container */}
         <Card
-          elevation={8}
+          elevation={0}
           sx={{
             width: "100%",
-            p: 4,
-            borderRadius: 4,
+            p: { xs: 3, sm: 5, md: 6 },
+            borderRadius: "24px",
+            border: "1px solid #E5E7EB",
+            bgcolor: "#FFFFFF",
+            boxShadow: "0 12px 35px rgba(0, 0, 0, 0.04)"
           }}
         >
-          <CardContent>
+          {/* Logo & Header */}
+          <Box textAlign="center" mb={5}>
+            <Box
+              component={Link}
+              to="/"
+              sx={{ display: "inline-block", textDecoration: "none", mb: 2 }}
+            >
+              <Box
+                component="img"
+                src={logo}
+                alt="Kharido.com Logo"
+                sx={{
+                  height: { xs: 54, md: 68 },
+                  objectFit: "contain"
+                }}
+              />
+            </Box>
 
             <Typography
-              variant="h3"
-              align="center"
-              fontWeight="bold"
-              gutterBottom
+              variant="h4"
+              fontWeight={800}
+              sx={{ color: "#111827", fontSize: { xs: "1.8rem", md: "2.4rem" }, mb: 1 }}
             >
-              Join Kharido.Com
+              Join Kharido<Box component="span" sx={{ color: "#FF6B00" }}>.com</Box>
             </Typography>
 
             <Typography
-              align="center"
+              variant="body1"
               color="text.secondary"
-              mb={5}
+              sx={{ fontSize: { xs: "0.95rem", md: "1.05rem" }, maxWidth: 520, mx: "auto" }}
             >
-              Choose how you want to register
+              Create your account and start your shopping or selling journey today.
             </Typography>
+          </Box>
 
-            <Grid container spacing={4}>
-
-              {/* Customer */}
-
-              <Grid item xs={12} md={4}>
-                <Card
-                  elevation={3}
+          {/* Cards Grid - Side by Side CSS Grid */}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" },
+              gap: 4,
+              width: "100%",
+              maxWidth: 960,
+              mx: "auto",
+              alignItems: "stretch"
+            }}
+          >
+            {/* Customer Card */}
+            <Card
+              elevation={0}
+              sx={{
+                p: { xs: 3, md: 4 },
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                borderRadius: "20px",
+                border: "1.5px solid #E5E7EB",
+                bgcolor: "#FFFFFF",
+                boxSizing: "border-box",
+                cursor: "pointer",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  borderColor: "#00838F",
+                  boxShadow: "0 16px 36px rgba(0, 131, 143, 0.15)",
+                  "& .customer-icon-box": {
+                    bgcolor: "#00838F",
+                    color: "#FFFFFF"
+                  }
+                }
+              }}
+            >
+              <Box>
+                {/* Icon Header */}
+                <Box
+                  className="customer-icon-box"
                   sx={{
-                    textAlign: "center",
-                    p: 3,
-                    borderRadius: 3,
-                    transition: "0.3s",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: 10,
-                    },
+                    width: 72,
+                    height: 72,
+                    borderRadius: "20px",
+                    bgcolor: "#E6F7F5",
+                    color: "#00838F",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 2.5,
+                    transition: "all 0.3s ease"
                   }}
                 >
-                  <PersonIcon
-                    color="primary"
-                    sx={{ fontSize: 70 }}
-                  />
+                  <PersonIcon sx={{ fontSize: 40 }} />
+                </Box>
 
-                  <Typography
-                    variant="h5"
-                    mt={2}
-                    mb={1}
-                  >
-                    Customer
-                  </Typography>
+                <Typography variant="h5" fontWeight={700} sx={{ color: "#111827", mb: 0.5 }}>
+                  Customer
+                </Typography>
 
-                  <Typography
-                    color="text.secondary"
-                    mb={3}
-                  >
-                    Buy products from Kharido.
-                  </Typography>
+                <Typography variant="body2" sx={{ color: "#6B7280", mb: 3 }}>
+                  Shop from thousands of products across electronics, fashion & daily essentials.
+                </Typography>
 
-                  <Button
-                    component={Link}
-                    to="/register/user"
-                    variant="contained"
-                    fullWidth
-                  >
-                    Register
-                  </Button>
+                {/* Benefits List */}
+                <List disablePadding sx={{ mb: 3 }}>
+                  {customerBenefits.map((benefit, i) => (
+                    <ListItem key={i} disableGutters sx={{ py: 0.6 }}>
+                      <ListItemIcon sx={{ minWidth: 28, color: "#00838F" }}>
+                        <CheckCircleOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={benefit}
+                        primaryTypographyProps={{
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
+                          color: "#374151"
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
 
-                </Card>
-              </Grid>
+              {/* Action Button */}
+              <Button
+                component={Link}
+                to="/register/user"
+                variant="contained"
+                fullWidth
+                size="large"
+                sx={{
+                  bgcolor: "#00838F",
+                  color: "#FFFFFF",
+                  py: 1.5,
+                  fontSize: "0.95rem",
+                  fontWeight: 700,
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 14px rgba(0, 131, 143, 0.25)",
+                  "&:hover": {
+                    bgcolor: "#00695C",
+                    boxShadow: "0 6px 18px rgba(0, 105, 92, 0.35)"
+                  }
+                }}
+              >
+                Create Customer Account
+              </Button>
+            </Card>
 
-              {/* Seller */}
-
-              <Grid item xs={12} md={4}>
-                <Card
-                  elevation={3}
+            {/* Seller Card */}
+            <Card
+              elevation={0}
+              sx={{
+                p: { xs: 3, md: 4 },
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                borderRadius: "20px",
+                border: "1.5px solid #E5E7EB",
+                bgcolor: "#FFFFFF",
+                boxSizing: "border-box",
+                cursor: "pointer",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                "&:hover": {
+                  transform: "translateY(-8px)",
+                  borderColor: "#FF6B00",
+                  boxShadow: "0 16px 36px rgba(255, 107, 0, 0.15)",
+                  "& .seller-icon-box": {
+                    bgcolor: "#FF6B00",
+                    color: "#FFFFFF"
+                  }
+                }
+              }}
+            >
+              <Box>
+                {/* Icon Header */}
+                <Box
+                  className="seller-icon-box"
                   sx={{
-                    textAlign: "center",
-                    p: 3,
-                    borderRadius: 3,
-                    transition: "0.3s",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: 10,
-                    },
+                    width: 72,
+                    height: 72,
+                    borderRadius: "20px",
+                    bgcolor: "#FFF3E6",
+                    color: "#FF6B00",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 2.5,
+                    transition: "all 0.3s ease"
                   }}
                 >
-                  <StoreIcon
-                    color="success"
-                    sx={{ fontSize: 70 }}
-                  />
+                  <StoreIcon sx={{ fontSize: 40 }} />
+                </Box>
 
-                  <Typography
-                    variant="h5"
-                    mt={2}
-                    mb={1}
-                  >
-                    Seller
-                  </Typography>
+                <Typography variant="h5" fontWeight={700} sx={{ color: "#111827", mb: 0.5 }}>
+                  Seller / Vendor
+                </Typography>
 
-                  <Typography
-                    color="text.secondary"
-                    mb={3}
-                  >
-                    Sell your products on Kharido.
-                  </Typography>
+                <Typography variant="body2" sx={{ color: "#6B7280", mb: 3 }}>
+                  Start selling on Kharido and grow your business with seamless tools.
+                </Typography>
 
-                  <Button
-                    component={Link}
-                    to="/register/seller"
-                    variant="contained"
-                    color="success"
-                    fullWidth
-                  >
-                    Register
-                  </Button>
+                {/* Benefits List */}
+                <List disablePadding sx={{ mb: 3 }}>
+                  {sellerBenefits.map((benefit, i) => (
+                    <ListItem key={i} disableGutters sx={{ py: 0.6 }}>
+                      <ListItemIcon sx={{ minWidth: 28, color: "#FF6B00" }}>
+                        <CheckCircleOutlinedIcon fontSize="small" />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={benefit}
+                        primaryTypographyProps={{
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
+                          color: "#374151"
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
 
-                </Card>
-              </Grid>
-
-              {/* Admin */}
-
-              <Grid item xs={12} md={4}>
-                <Card
-                  elevation={3}
-                  sx={{
-                    textAlign: "center",
-                    p: 3,
-                    borderRadius: 3,
-                    transition: "0.3s",
-                    "&:hover": {
-                      transform: "translateY(-8px)",
-                      boxShadow: 10,
-                    },
-                  }}
-                >
-                  <AdminPanelSettingsIcon
-                    color="warning"
-                    sx={{ fontSize: 70 }}
-                  />
-
-                  <Typography
-                    variant="h5"
-                    mt={2}
-                    mb={1}
-                  >
-                    Admin
-                  </Typography>
-
-                  <Typography
-                    color="text.secondary"
-                    mb={3}
-                  >
-                    Manage the Kharido platform.
-                  </Typography>
-
-                  <Button
-                    component={Link}
-                    to="/register/admin"
-                    variant="contained"
-                    color="warning"
-                    fullWidth
-                  >
-                    Register
-                  </Button>
-
-                </Card>
-              </Grid>
-
-            </Grid>
-
-          </CardContent>
+              {/* Action Button */}
+              <Button
+                component={Link}
+                to="/register/seller"
+                variant="contained"
+                fullWidth
+                size="large"
+                sx={{
+                  bgcolor: "#FF6B00",
+                  color: "#FFFFFF",
+                  py: 1.5,
+                  fontSize: "0.95rem",
+                  fontWeight: 700,
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 14px rgba(255, 107, 0, 0.25)",
+                  "&:hover": {
+                    bgcolor: "#E65100",
+                    boxShadow: "0 6px 18px rgba(230, 81, 0, 0.35)"
+                  }
+                }}
+              >
+                Become a Seller
+              </Button>
+            </Card>
+          </Box>
         </Card>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 }
