@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final OrderTrackingRepository orderTrackingRepository;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
@@ -37,7 +38,8 @@ public class OrderServiceImpl implements OrderService {
             AddressRepository addressRepository,
             CartRepository cartRepository,
             CartItemRepository cartItemRepository,
-            ProductRepository productRepository) {
+            ProductRepository productRepository,
+            OrderTrackingRepository orderTrackingRepository) {
 
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
@@ -46,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
+        this.orderTrackingRepository = orderTrackingRepository;
     }
 
     @Override
@@ -75,24 +78,11 @@ public class OrderServiceImpl implements OrderService {
 
         BigDecimal totalAmount = BigDecimal.ZERO;
 
-        Order order = new Order();
-
-        order.setUser(user);
-        order.setAddress(address);
-        order.setPaymentStatus(PaymentStatus.PENDING);
-        order.setOrderStatus(OrderStatus.PLACED);
-
-        order = orderRepository.save(order);
-
-        List<OrderItemResponse> responseItems =
-                new ArrayList<>();
-
         for (CartItem cartItem : cartItems) {
 
             Product product = cartItem.getProduct();
 
             if (product.getStockQuantity() < cartItem.getQuantity()) {
-
                 throw new RuntimeException(
                         product.getProductName() + " is out of stock.");
             }
@@ -102,6 +92,39 @@ public class OrderServiceImpl implements OrderService {
                             .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
             totalAmount = totalAmount.add(subtotal);
+        }
+
+        Order order = new Order();
+
+        order.setUser(user);
+        order.setAddress(address);
+        order.setPaymentStatus(PaymentStatus.PENDING);
+        order.setOrderStatus(OrderStatus.PENDING_PAYMENT);
+        order.setTotalAmount(totalAmount);
+
+        order = orderRepository.save(order);
+
+        OrderTracking initialTracking = new OrderTracking(
+                order,
+                "ORDER_PLACED",
+                "Kharido Platform",
+                address.getCity(),
+                address.getState(),
+                "Order placed by customer",
+                user.getUsername()
+        );
+        orderTrackingRepository.save(initialTracking);
+
+        List<OrderItemResponse> responseItems =
+                new ArrayList<>();
+
+        for (CartItem cartItem : cartItems) {
+
+            Product product = cartItem.getProduct();
+
+            BigDecimal subtotal =
+                    cartItem.getPrice()
+                            .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
             OrderItem orderItem = new OrderItem();
 
@@ -114,10 +137,8 @@ public class OrderServiceImpl implements OrderService {
 
             orderItemRepository.save(orderItem);
 
-            product.setStockQuantity(
-                    product.getStockQuantity() - cartItem.getQuantity());
-
-            productRepository.save(product);
+            // NOTE: Stock is NOT deducted here.
+            // Stock deduction and cart clearing happen only on paymentSuccess.
 
             OrderItemResponse dto =
                     new OrderItemResponse();
@@ -132,18 +153,26 @@ public class OrderServiceImpl implements OrderService {
             responseItems.add(dto);
         }
 
-        order.setTotalAmount(totalAmount);
+        // NOTE: Cart is NOT cleared here.
+        // Cart is cleared only on paymentSuccess.
 
-        orderRepository.save(order);
+        OrderAddressResponse addressResponse =
+                new OrderAddressResponse();
 
-        cartItemRepository.deleteAll(cartItems);
+        addressResponse.setAddressId(address.getAddressId());
+        addressResponse.setAddressName(address.getAddressName());
+        addressResponse.setStreet(address.getStreet());
+        addressResponse.setCity(address.getCity());
+        addressResponse.setState(address.getState());
+        addressResponse.setCountry(address.getCountry());
+        addressResponse.setPincode(address.getPincode());
 
         OrderResponse response =
                 new OrderResponse();
 
         response.setOrderId(order.getOrderId());
         response.setUserId(user.getUserId());
-        response.setAddressId(address.getAddressId());
+        response.setAddress(addressResponse);
         response.setOrderDate(order.getOrderDate());
         response.setTotalAmount(order.getTotalAmount());
         response.setPaymentStatus(order.getPaymentStatus());
@@ -152,6 +181,8 @@ public class OrderServiceImpl implements OrderService {
 
         return response;
     }
+    
+    
     @Override
     public List<OrderResponse> getMyOrders(
             String username) {
@@ -160,9 +191,11 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() ->
                         new RuntimeException("User not found"));
 
-        List<Order> orders = orderRepository.findByUser(user);
+        List<Order> orders =
+                orderRepository.findByUser(user);
 
-        List<OrderResponse> responseList = new ArrayList<>();
+        List<OrderResponse> responseList =
+                new ArrayList<>();
 
         for (Order order : orders) {
 
@@ -187,12 +220,23 @@ public class OrderServiceImpl implements OrderService {
                 itemResponses.add(dto);
             }
 
+            OrderAddressResponse addressResponse =
+                    new OrderAddressResponse();
+
+            addressResponse.setAddressId(order.getAddress().getAddressId());
+            addressResponse.setAddressName(order.getAddress().getAddressName());
+            addressResponse.setStreet(order.getAddress().getStreet());
+            addressResponse.setCity(order.getAddress().getCity());
+            addressResponse.setState(order.getAddress().getState());
+            addressResponse.setCountry(order.getAddress().getCountry());
+            addressResponse.setPincode(order.getAddress().getPincode());
+
             OrderResponse response =
                     new OrderResponse();
 
             response.setOrderId(order.getOrderId());
             response.setUserId(user.getUserId());
-            response.setAddressId(order.getAddress().getAddressId());
+            response.setAddress(addressResponse);
             response.setOrderDate(order.getOrderDate());
             response.setTotalAmount(order.getTotalAmount());
             response.setPaymentStatus(order.getPaymentStatus());
@@ -243,12 +287,23 @@ public class OrderServiceImpl implements OrderService {
             itemResponses.add(dto);
         }
 
+        OrderAddressResponse addressResponse =
+                new OrderAddressResponse();
+
+        addressResponse.setAddressId(order.getAddress().getAddressId());
+        addressResponse.setAddressName(order.getAddress().getAddressName());
+        addressResponse.setStreet(order.getAddress().getStreet());
+        addressResponse.setCity(order.getAddress().getCity());
+        addressResponse.setState(order.getAddress().getState());
+        addressResponse.setCountry(order.getAddress().getCountry());
+        addressResponse.setPincode(order.getAddress().getPincode());
+
         OrderResponse response =
                 new OrderResponse();
 
         response.setOrderId(order.getOrderId());
         response.setUserId(user.getUserId());
-        response.setAddressId(order.getAddress().getAddressId());
+        response.setAddress(addressResponse);
         response.setOrderDate(order.getOrderDate());
         response.setTotalAmount(order.getTotalAmount());
         response.setPaymentStatus(order.getPaymentStatus());
@@ -297,5 +352,176 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         return "Order cancelled successfully.";
+    }
+    
+    
+    
+    @Override
+    public String paymentSuccess(Integer orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            return "Payment already completed.";
+        }
+
+        List<OrderItem> orderItems =
+                orderItemRepository.findByOrder(order);
+
+        User user = order.getUser();
+
+        // Deduct stock for each ordered item
+        for (OrderItem item : orderItems) {
+
+            Product product = item.getProduct();
+
+            if (product.getStockQuantity() < item.getQuantity()) {
+                throw new RuntimeException(
+                        product.getProductName() + " is out of stock.");
+            }
+
+            product.setStockQuantity(
+                    product.getStockQuantity() - item.getQuantity());
+
+            productRepository.save(product);
+        }
+
+        // Clear the cart now that payment is confirmed
+        Cart cart = cartRepository.findByUser(user).orElse(null);
+        if (cart != null) {
+            List<CartItem> cartItems = cartItemRepository.findByCart(cart);
+            cartItemRepository.deleteAll(cartItems);
+        }
+
+        order.setPaymentStatus(PaymentStatus.PAID);
+        order.setOrderStatus(OrderStatus.PLACED);
+        orderRepository.save(order);
+
+        OrderTracking paidTracking = new OrderTracking(
+                order,
+                "PAYMENT_SUCCESSFUL",
+                "Payment Gateway",
+                order.getAddress() != null ? order.getAddress().getCity() : "Online",
+                order.getAddress() != null ? order.getAddress().getState() : "India",
+                "Payment completed successfully",
+                "SYSTEM"
+        );
+        orderTrackingRepository.save(paidTracking);
+
+        return "Payment Successful";
+    }
+    
+    @Override
+    public String paymentFailed(Integer orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new RuntimeException("Order not found"));
+
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            return "Payment already completed, cannot mark as failed.";
+        }
+
+        // Cancel the order and mark payment as failed
+        order.setPaymentStatus(PaymentStatus.FAILED);
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+
+        // Add a tracking event for the failure
+        OrderTracking failedTracking = new OrderTracking(
+                order,
+                "PAYMENT_FAILED",
+                "Payment Gateway",
+                order.getAddress() != null ? order.getAddress().getCity() : "Online",
+                order.getAddress() != null ? order.getAddress().getState() : "India",
+                "Payment failed. Order cancelled. Cart items restored.",
+                "SYSTEM"
+        );
+        orderTrackingRepository.save(failedTracking);
+
+        // NOTE: Cart is NOT touched here — it was never cleared on placeOrder,
+        // so the customer's items are still intact and they can retry.
+
+        return "Payment Failed";
+    }
+
+    @Override
+    public List<OrderTrackingResponse> getTracking(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        List<OrderTracking> list = orderTrackingRepository.findByOrderOrderIdOrderByUpdatedAtAsc(orderId);
+
+        if (list.isEmpty()) {
+            OrderTracking fallbackPlaced = new OrderTracking(
+                    order,
+                    "ORDER_PLACED",
+                    "Kharido Platform",
+                    order.getAddress() != null ? order.getAddress().getCity() : "Mumbai",
+                    order.getAddress() != null ? order.getAddress().getState() : "Maharashtra",
+                    "Order placed by customer",
+                    "CUSTOMER"
+            );
+            orderTrackingRepository.save(fallbackPlaced);
+
+            if (order.getPaymentStatus() == PaymentStatus.PAID) {
+                OrderTracking fallbackPaid = new OrderTracking(
+                        order,
+                        "PAYMENT_SUCCESSFUL",
+                        "Payment Gateway",
+                        order.getAddress() != null ? order.getAddress().getCity() : "Mumbai",
+                        order.getAddress() != null ? order.getAddress().getState() : "Maharashtra",
+                        "Payment confirmed",
+                        "SYSTEM"
+                );
+                orderTrackingRepository.save(fallbackPaid);
+            }
+
+            list = orderTrackingRepository.findByOrderOrderIdOrderByUpdatedAtAsc(orderId);
+        }
+
+        return list.stream().map(t -> new OrderTrackingResponse(
+                t.getTrackingId(),
+                t.getOrder().getOrderId(),
+                t.getTrackingStatus(),
+                t.getLocationName(),
+                t.getCity(),
+                t.getState(),
+                t.getDescription(),
+                t.getUpdatedBy(),
+                t.getUpdatedAt()
+        )).collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public OrderTrackingResponse addTrackingEvent(Integer orderId, UpdateTrackingRequest request) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        OrderTracking tracking = new OrderTracking(
+                order,
+                request.getStatus() != null ? request.getStatus().toUpperCase() : "UPDATED",
+                request.getLocationName(),
+                request.getCity() != null ? request.getCity() : (order.getAddress() != null ? order.getAddress().getCity() : "Hub"),
+                request.getState() != null ? request.getState() : (order.getAddress() != null ? order.getAddress().getState() : "State"),
+                request.getDescription() != null ? request.getDescription() : "Status updated to " + request.getStatus(),
+                request.getUpdatedBy() != null ? request.getUpdatedBy() : "SYSTEM"
+        );
+
+        tracking = orderTrackingRepository.save(tracking);
+
+        return new OrderTrackingResponse(
+                tracking.getTrackingId(),
+                order.getOrderId(),
+                tracking.getTrackingStatus(),
+                tracking.getLocationName(),
+                tracking.getCity(),
+                tracking.getState(),
+                tracking.getDescription(),
+                tracking.getUpdatedBy(),
+                tracking.getUpdatedAt()
+        );
     }
 }

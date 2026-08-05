@@ -12,13 +12,26 @@ import CustomerRegisterComp from './components/CustomerRegisterComp'
 import SellerRegisterComp from './components/SellerRegisterComp'
 import AdminRegisterComp from './components/AdminRegisterComp'
 import LogoutComp from './components/Logout'
+import TermsConditions from './components/TermsConditions'
+import PrivacyPolicy from './components/PrivacyPolicy'
 
 // Product Components
 import ProductList from './components/ProductList'
 import ProductDetails from './components/ProductDetails'
 
 // Customer Dashboard
-import UserDashboard from './components/UserDashboard'
+import CustomerLayout from "./customer/layouts/CustomerLayout";
+import Dashboard from "./customer/pages/Dashboard";
+import CustomerProductDetails from "./customer/pages/CustomerProductDetails";
+import Profile from "./customer/pages/Profile";
+import Address from "./customer/pages/Address";
+import Cart from "./customer/pages/Cart";
+import Orders from "./customer/pages/Orders";
+import Wishlist from "./customer/pages/Wishlist";
+
+//Customer Pages
+import Checkout from "./customer/pages/Checkout";
+import Payment from "./customer/pages/Payment";
 
 // Seller Dashboard
 import SellerDashboard from './components/SellerDashboard'
@@ -47,13 +60,15 @@ import AssignedOrders from './components/AssignedOrders'
 import PickedOrders from './components/PickedOrders'
 import InTransitOrders from './components/InTransitOrders'
 import DeliveredOrders from './components/DeliveredOrders'
-
+import { CartProvider } from "./customer/context/CartContext";
+import { WishlistProvider } from "./customer/context/WishlistContext";
 
 function App() {
 
   return (
-
-    <BrowserRouter>
+    <CartProvider>
+      <WishlistProvider>
+        <BrowserRouter>
 
       <Routes>
 
@@ -91,6 +106,16 @@ function App() {
           element={<AdminRegisterComp />}
         />
 
+        <Route
+          path="/terms"
+          element={<TermsConditions />}
+        />
+
+        <Route
+          path="/privacy"
+          element={<PrivacyPolicy />}
+        />
+
 
         {/* =====================================================
             PRODUCT ROUTES
@@ -99,6 +124,11 @@ function App() {
 
         <Route
           path="/products"
+          element={<ProductList />}
+        />
+
+        <Route
+          path="/categories"
           element={<ProductList />}
         />
 
@@ -116,33 +146,45 @@ function App() {
         <Route
           path="/user"
           element={
-            <ProtectedRoutes role="CUSTOMER">
-              <UserDashboard />
-            </ProtectedRoutes>
-          }
-        >
+        <ProtectedRoutes role="CUSTOMER">
+            <CustomerLayout />
+        </ProtectedRoutes>
+    }
+>
 
-          <Route
-            path="profile"
-            element={<h1>Profile</h1>}
-          />
+    <Route index element={<Dashboard />} />
 
-          <Route
-            path="orders"
-            element={<h1>Orders</h1>}
-          />
+    <Route
+    path="product/:id"
+    element={<CustomerProductDetails />}
+/>
 
-          <Route
-            path="wishlist"
-            element={<h1>Wishlist</h1>}
-          />
+    <Route path="profile" element={<Profile />} />
 
-          <Route
-            path="logout"
-            element={<LogoutComp />}
-          />
+    <Route path="address" element={<Address />} />
 
-        </Route>
+    <Route path="cart" element={<Cart />} />
+
+    <Route path="orders" element={<Orders />} />
+
+    <Route
+      path="checkout"
+      element={<Checkout />}
+    />
+
+    <Route
+      path="payment/:orderId"
+      element={<Payment />}
+    />
+
+    <Route
+      path="wishlist"
+      element={<Wishlist />}
+    />
+    
+    <Route path="logout" element={<LogoutComp />} />
+
+</Route>
 
 
         {/* =====================================================
@@ -315,8 +357,10 @@ function App() {
 
       </Routes>
 
-    </BrowserRouter>
+        </BrowserRouter>
+      </WishlistProvider>
+    </CartProvider>
   )
 }
 
-export default App
+export default App;

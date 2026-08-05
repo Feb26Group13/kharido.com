@@ -13,7 +13,7 @@ public class OrderResponse {
 
     private Integer userId;
 
-    private Integer addressId;
+    private OrderAddressResponse address;
 
     private LocalDateTime orderDate;
 

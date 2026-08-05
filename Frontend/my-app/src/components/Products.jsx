@@ -1,4 +1,5 @@
-import React from "react";
+import { Box, Typography } from "@mui/material";
+import ProductCard from "../customer/components/product/ProductCard";
 import laptop from "../assets/laptop.jpg";
 import mobile from "../assets/mobile.jpg";
 import headphone from "../assets/headphone.jpg";
@@ -6,44 +7,53 @@ import headphone from "../assets/headphone.jpg";
 function Products() {
   const products = [
     {
-      id: 1,
-      name: "Laptop",
-      price: "₹70,000",
-       image: laptop
+      productId: 1,
+      productName: "ASUS VivoBook 15 Laptop",
+      category: "Electronics",
+      brand: "ASUS",
+      price: 70000,
+      stockQuantity: 10,
+      imageUrl: laptop
     },
     {
-      id: 2,
-      name: "Mobile",
-      price: "₹60,000",
-       image: mobile
+      productId: 2,
+      productName: "iPhone 15 Smartphone",
+      category: "Mobiles",
+      brand: "Apple",
+      price: 60000,
+      stockQuantity: 8,
+      imageUrl: mobile
     },
     {
-      id: 3,
-      name: "Headphones",
-      price: "₹2,000",
-       image: headphone
+      productId: 3,
+      productName: "boAt Rockerz 450 Headphones",
+      category: "Electronics",
+      brand: "boAt",
+      price: 2000,
+      stockQuantity: 15,
+      imageUrl: headphone
     }
   ];
 
   return (
-    <section className="products">
-      <h2>Featured Products</h2>
+    <Box sx={{ px: { xs: 2, md: 4 }, py: 4, mb: 4, width: "100%", boxSizing: "border-box" }}>
+      <Typography variant="h5" fontWeight={700} sx={{ color: "#111827", mb: 3 }}>
+        Featured Products
+      </Typography>
 
-      <div className="product-container">
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "24px",
+          width: "100%"
+        }}
+      >
         {products.map((product) => (
-          <div key={product.id} className="product-card">
-
-            <img
-              src={product.image}
-              alt={product.name}
-            />
-            <h3>{product.name}</h3>
-            <p>{product.price}</p>
-            <button>Add to Cart</button>
-          </div>
+          <ProductCard key={product.productId} product={product} />
         ))}
-      </div>
-    </section>
+      </Box>
+    </Box>
   );
 }
 

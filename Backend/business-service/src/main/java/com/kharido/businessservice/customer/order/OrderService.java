@@ -18,5 +18,12 @@ public interface OrderService {
     String cancelOrder(
             String username,
             Integer orderId);
+    
+    String paymentSuccess(Integer orderId);
 
+    String paymentFailed(Integer orderId);
+
+    List<OrderTrackingResponse> getTracking(Integer orderId);
+
+    OrderTrackingResponse addTrackingEvent(Integer orderId, UpdateTrackingRequest request);
 }

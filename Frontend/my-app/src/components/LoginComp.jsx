@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
+import logo from "../assets/logo.png";
 
 import {
   Alert,
@@ -117,34 +118,42 @@ export default function LoginComp() {
         minHeight: "100vh",
         display: "flex",
         alignItems: "center",
+        py: 6
       }}
     >
       <Paper
-        elevation={10}
+        elevation={0}
         sx={{
           width: "100%",
-          p: 5,
-          borderRadius: 4,
+          p: { xs: 3, sm: 5 },
+          borderRadius: "20px",
+          border: "1px solid #E5E7EB",
+          bgcolor: "#FFFFFF",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.04)"
         }}
       >
         <Box textAlign="center" mb={3}>
-          <Avatar
-            sx={{
-              bgcolor: "primary.main",
-              width: 60,
-              height: 60,
-              mx: "auto",
-              mb: 2,
-            }}
+          <Box
+            component={Link}
+            to="/"
+            sx={{ display: "inline-block", textDecoration: "none", mb: 2 }}
           >
-            <LockOutlinedIcon />
-          </Avatar>
+            <Box
+              component="img"
+              src={logo}
+              alt="Kharido.com Logo"
+              sx={{
+                height: 56,
+                objectFit: "contain"
+              }}
+            />
+          </Box>
 
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h4" fontWeight={800} sx={{ color: "#111827" }}>
             Welcome Back
           </Typography>
 
-          <Typography color="text.secondary" mt={1}>
+          <Typography color="text.secondary" mt={0.5} sx={{ fontSize: "0.95rem" }}>
             Login to your Kharido account
           </Typography>
         </Box>
@@ -157,6 +166,7 @@ export default function LoginComp() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "10px" } }}
           />
 
           <TextField
@@ -167,6 +177,7 @@ export default function LoginComp() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            sx={{ "& .MuiOutlinedInput-root": { borderRadius: "10px" } }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -191,7 +202,7 @@ export default function LoginComp() {
             mt={2}
           >
             <FormControlLabel
-              control={<Checkbox />}
+              control={<Checkbox sx={{ color: "#00838F", "&.Mui-checked": { color: "#00838F" } }} />}
               label="Remember Me"
             />
 
@@ -199,6 +210,9 @@ export default function LoginComp() {
               to="#"
               style={{
                 textDecoration: "none",
+                color: "#00838F",
+                fontWeight: 600,
+                fontSize: "0.9rem"
               }}
             >
               Forgot Password?
@@ -213,25 +227,30 @@ export default function LoginComp() {
             sx={{
               mt: 3,
               py: 1.5,
-              borderRadius: 2,
+              borderRadius: "10px",
+              bgcolor: "#00838F",
+              fontSize: "1rem",
+              fontWeight: 700,
+              "&:hover": { bgcolor: "#00695C" }
             }}
           >
             LOGIN
           </Button>
 
           {msg && (
-            <Alert severity="error" sx={{ mt: 3 }}>
+            <Alert severity="error" sx={{ mt: 3, borderRadius: "10px" }}>
               {msg}
             </Alert>
           )}
 
-          <Typography textAlign="center" mt={3}>
+          <Typography textAlign="center" mt={3} sx={{ color: "#6B7280", fontSize: "0.95rem" }}>
             Don't have an account?{" "}
             <Link
               to="/register"
               style={{
                 textDecoration: "none",
-                fontWeight: "bold",
+                fontWeight: 700,
+                color: "#FF6B00"
               }}
             >
               Register
