@@ -1,154 +1,405 @@
-function AdminCustomers(){
+import { useEffect, useState } from "react";
 
-return(
+function AdminCustomers() {
 
-<div className="admin-page">
+    const [customers, setCustomers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
 
-<h1>Customer Management</h1>
+    const loadCustomers = async () => {
 
+        try {
 
-<hr/>
+            setLoading(true);
+            setError("");
 
+            const response = await fetch(
+                "http://localhost:8082/api/admin/users/customers",
+                {
+                    credentials: "include"
+                }
+            );
 
-<h2>Customers List</h2>
 
+            if (!response.ok) {
+                throw new Error("Unable to fetch customers");
+            }
 
 
-<div className="customer-box">
+            const data = await response.json();
 
+            console.log("CUSTOMER DATA =", data);
 
-<table className="admin-table">
+            setCustomers(data);
 
 
-<thead>
+        } catch (error) {
 
-<tr>
+            console.error(error);
 
-<th>Name</th>
+            setError("Unable to load customers");
 
-<th>Email</th>
 
-<th>Status</th>
+        } finally {
 
-<th>Action</th>
+            setLoading(false);
 
-</tr>
+        }
 
-</thead>
+    };
 
 
 
-<tbody>
+    useEffect(() => {
 
+        loadCustomers();
 
-<tr>
+    }, []);
 
 
-<td>
-Sailesh
-</td>
 
 
+    const updateCustomerStatus = async (id, status) => {
 
-<td>
-sailesh@gmail.com
-</td>
 
+        const message =
+            status === "BLOCKED"
+                ? "Block this customer?"
+                : "Activate this customer?";
 
 
-<td>
+        if (!window.confirm(message)) {
+            return;
+        }
 
-<span className="status completed">
-Active
-</span>
 
-</td>
 
+        try {
 
 
-<td>
+            const response = await fetch(
 
+                `http://localhost:8082/api/admin/users/${id}/status?status=${status}`,
 
-<button className="view-btn">
-View Details
-</button>
+                {
+                    method: "PUT",
+                    credentials: "include"
+                }
 
+            );
 
 
-<button className="delete-btn">
-Block User
-</button>
 
+            if (!response.ok) {
 
-</td>
+                throw new Error(
+                    "Status update failed"
+                );
 
+            }
 
 
-</tr>
 
+            loadCustomers();
 
 
-<tr>
 
+        } catch(error) {
 
-<td>
-Rahul
-</td>
 
+            console.error(error);
 
+            setError(
+                "Unable to update customer status"
+            );
 
-<td>
-rahul@gmail.com
-</td>
 
+        }
 
+    };
 
-<td>
 
-<span className="status completed">
-Active
-</span>
 
-</td>
 
 
+    return (
 
-<td>
+        <div className="admin-page">
 
 
-<button className="view-btn">
-View Details
-</button>
+            <h1>
+                Customer Management
+            </h1>
 
 
+            <hr />
 
-<button className="delete-btn">
-Block User
-</button>
 
 
-</td>
+            {
+                error &&
 
+                <div className="alert alert-danger">
 
+                    {error}
 
-</tr>
+                </div>
 
+            }
 
 
 
-</tbody>
 
+            <div className="customer-box">
 
-</table>
 
+                <h2>
+                    Customers List
+                </h2>
 
-</div>
 
 
-</div>
 
-)
+                {
+                    loading ?
+
+
+                    (
+
+                        <h4>
+                            Loading customers...
+                        </h4>
+
+                    )
+
+
+                    :
+
+
+                    (
+
+
+                    <table className="admin-table">
+
+
+                        <thead>
+
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Name</th>
+
+                                <th>Email</th>
+
+                                <th>Role</th>
+
+                                <th>Status</th>
+
+                                <th>Created At</th>
+
+                                <th>Action</th>
+
+
+                            </tr>
+
+
+                        </thead>
+
+
+
+
+
+                        <tbody>
+
+
+
+                        {
+                            customers.length === 0 ?
+
+
+                            (
+
+                                <tr>
+
+                                    <td 
+                                    colSpan="7"
+                                    className="text-center">
+
+                                        No Customers Found
+
+                                    </td>
+
+
+                                </tr>
+
+                            )
+
+
+                            :
+
+
+
+                            customers.map(customer => (
+
+
+
+                                <tr key={customer.userId}>
+
+
+                                    <td>
+                                        {customer.userId}
+                                    </td>
+
+
+
+                                    <td>
+                                        {customer.username}
+                                    </td>
+
+
+
+                                    <td>
+                                        {customer.email}
+                                    </td>
+
+
+
+                                    <td>
+                                        {customer.role}
+                                    </td>
+
+
+
+
+                                    <td>
+
+
+                                        <span
+                                        className={
+                                            customer.status === "ACTIVE"
+                                            ?
+                                            "status completed"
+                                            :
+                                            "status pending"
+                                        }>
+
+                                            {customer.status}
+
+                                        </span>
+
+
+                                    </td>
+
+
+
+
+
+                                    <td>
+
+                                        {
+                                            customer.createdAt
+                                            ?
+                                            customer.createdAt.replace("T"," ")
+                                            :
+                                            "-"
+                                        }
+
+                                    </td>
+
+
+
+
+
+                                    <td>
+
+
+                                    {
+                                        customer.status === "ACTIVE"
+
+
+                                        ?
+
+
+                                        <button
+
+                                        className="delete-btn"
+
+                                        onClick={() =>
+                                            updateCustomerStatus(
+                                                customer.userId,
+                                                "BLOCKED"
+                                            )
+                                        }>
+
+                                            Block User
+
+                                        </button>
+
+
+
+                                        :
+
+
+
+                                        <button
+
+                                        className="view-btn"
+
+                                        onClick={() =>
+                                            updateCustomerStatus(
+                                                customer.userId,
+                                                "ACTIVE"
+                                            )
+                                        }>
+
+                                            Activate User
+
+                                        </button>
+
+
+                                    }
+
+
+                                    </td>
+
+
+
+
+                                </tr>
+
+
+
+                            ))
+
+
+                        }
+
+
+
+
+                        </tbody>
+
+
+
+                    </table>
+
+
+                    )
+
+                }
+
+
+
+            </div>
+
+
+
+        </div>
+
+    );
 
 }
 

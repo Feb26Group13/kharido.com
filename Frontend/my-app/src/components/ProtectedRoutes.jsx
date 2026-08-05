@@ -4,22 +4,20 @@ function ProtectedRoutes({ children, role }) {
 
     const authData = localStorage.getItem("auth");
 
-    // User is not logged in
     if (!authData) {
         return <Navigate to="/login" replace />;
     }
 
     const auth = JSON.parse(authData);
 
-    // Get logged-in user's role
-    const userRole = auth.user?.role;
-
-    // User does not have required role
-    if (userRole !== role) {
+    if (!auth.user) {
         return <Navigate to="/login" replace />;
     }
 
-    // User is authorized
+    if (auth.user.role !== role) {
+        return <Navigate to="/login" replace />;
+    }
+
     return children;
 }
 

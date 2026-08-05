@@ -10,9 +10,11 @@ return(
 
 <div className="sidebar">
 
+
 <h2>Kharido</h2>
 
 <h3>Admin Panel</h3>
+
 
 
 <NavLink to="/admin">
@@ -20,9 +22,11 @@ Dashboard
 </NavLink>
 
 
+
 <NavLink to="/admin/orders">
 Orders
 </NavLink>
+
 
 
 <NavLink to="/admin/products">
@@ -30,13 +34,16 @@ Products
 </NavLink>
 
 
+
 <NavLink to="/admin/customers">
 Customers
 </NavLink>
 
- <NavLink to="/admin/vendors">
-          Vendors
-        </NavLink>
+
+
+<NavLink to="/admin/vendors">
+Vendors
+</NavLink>
 
 
 
@@ -45,12 +52,23 @@ Reports
 </NavLink>
 
 
+
 <NavLink to="/admin/settings">
 Settings
 </NavLink>
 
 
+
+{/* Logout */}
+
+<NavLink to="/admin/logout">
+Logout
+</NavLink>
+
+
+
 </div>
+
 
 
 
@@ -59,6 +77,7 @@ Settings
 <Outlet />
 
 </div>
+
 
 
 </div>

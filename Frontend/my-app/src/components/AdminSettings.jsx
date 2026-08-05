@@ -1,183 +1,109 @@
-function AdminSettings(){
+import { useEffect, useState } from "react";
 
-return(
+function AdminSettings() {
 
-<div className="admin-page">
+    const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
+    useEffect(() => {
 
-<h1>Admin Settings</h1>
+        const loadProfile = async () => {
 
+            try {
 
-<hr/>
+                const response = await fetch(
+                    "http://localhost:8082/api/admin/profile",
+                    {
+                        credentials: "include"
+                    }
+                );
 
+                if (!response.ok) {
+                    throw new Error("Unable to load profile");
+                }
 
+                const data = await response.json();
 
+                console.log("PROFILE =", data);
 
-<div className="settings-container">
+                setProfile(data);
 
+            } catch (err) {
 
+                console.error(err);
 
-{/* Admin Profile */}
+                setError("Unable to load profile.");
 
-<div className="settings-card">
+            } finally {
 
+                setLoading(false);
 
-<h2>Admin Profile</h2>
+            }
 
+        };
 
-<p>
-<strong>Name:</strong> Admin
-</p>
+        loadProfile();
 
+    }, []);
 
-<p>
-<strong>Email:</strong> admin@kharido.com
-</p>
+    if (loading) {
+        return <h2>Loading...</h2>;
+    }
 
+    if (error) {
+        return <h2>{error}</h2>;
+    }
 
-<button className="view-btn">
-Edit Profile
-</button>
+    return (
 
+        <div className="admin-page">
 
-</div>
+            <h1>Admin Profile</h1>
 
+            <hr />
 
+            <table className="admin-table">
 
+                <tbody>
 
+                    <tr>
+                        <th>User ID</th>
+                        <td>{profile.userId}</td>
+                    </tr>
 
-{/* Password Change */}
+                    <tr>
+                        <th>Username</th>
+                        <td>{profile.username}</td>
+                    </tr>
 
-<div className="settings-card">
+                    <tr>
+                        <th>Email</th>
+                        <td>{profile.email}</td>
+                    </tr>
 
+                    <tr>
+                        <th>Role</th>
+                        <td>{profile.role}</td>
+                    </tr>
 
-<h2>Password Change</h2>
+                    <tr>
+                        <th>Status</th>
+                        <td>{profile.status}</td>
+                    </tr>
 
+                    <tr>
+                        <th>Created At</th>
+                        <td>{profile.createdAt}</td>
+                    </tr>
 
+                </tbody>
 
-<input
+            </table>
 
-type="password"
+        </div>
 
-placeholder="Enter New Password"
-
-/>
-
-
-
-<br/>
-
-
-<button className="save-btn">
-
-Change Password
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* Website Settings */}
-
-<div className="settings-card">
-
-
-<h2>Website Settings</h2>
-
-
-
-<p>
-Website Name
-</p>
-
-
-<input
-
-type="text"
-
-placeholder="Kharido"
-
-/>
-
-
-
-<p>
-Payment Settings
-</p>
-
-
-<button className="save-btn">
-Configure Payment
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-
-{/* Security Settings */}
-
-<div className="settings-card">
-
-
-<h2>Security Settings</h2>
-
-
-
-<ul>
-
-
-<li>
-Enable Two Factor Authentication
-</li>
-
-
-<li>
-Login Activity Monitoring
-</li>
-
-
-<li>
-Admin Access Control
-</li>
-
-
-</ul>
-
-
-
-<button className="save-btn">
-
-Save Security Settings
-
-</button>
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-)
-
+    );
 }
-
 
 export default AdminSettings;

@@ -2,66 +2,62 @@ import { useEffect, useState } from "react";
 
 function AdminDashboard() {
 
-    const [message, setMessage] = useState("");
+    const [dashboard, setDashboard] = useState({
+        totalUsers: 0,
+        totalSellers: 0,
+        totalProducts: 0,
+        totalOrders: 0
+    });
+
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
     useEffect(() => {
 
-        // Get authentication data from localStorage
-        const authData = localStorage.getItem("auth");
-
-        if (!authData) {
-            setError("User is not logged in");
-            return;
-        }
-
-        // Convert JSON string to JavaScript object
-        const auth = JSON.parse(authData);
-
-        // Get JWT token
-        const token = auth.token;
-
-        if (!token) {
-            setError("JWT Token not found");
-            return;
-        }
-
-        // Call protected Admin API
-        fetch("http://localhost:8081/api/admin/auth/test", {
+        fetch("http://localhost:8082/api/admin/dashboard", {
             method: "GET",
-
+            credentials: "include",
             headers: {
-                "Authorization": `Bearer ${token}`,
                 "Content-Type": "application/json"
             }
         })
-        .then((response) => {
+        .then(async (response) => {
 
             if (!response.ok) {
-                throw new Error(
-                    `Request failed with status ${response.status}`
-                );
+
+                const text = await response.text();
+
+                throw new Error(text || "Failed to load dashboard");
             }
 
-            return response.text();
+            return response.json();
         })
         .then((data) => {
 
-            console.log("Backend Response:", data);
+            console.log("Dashboard Response:", data);
 
-            setMessage(data);
+            setDashboard(data);
         })
         .catch((error) => {
 
-            console.error("API Error:", error);
+            console.error(error);
 
-            setError(
-                "Unable to access protected Admin API"
-            );
+            setError(error.message);
+
+        })
+        .finally(() => {
+
+            setLoading(false);
+
         });
 
     }, []);
 
+    if (loading) {
+
+        return <h2>Loading Dashboard...</h2>;
+
+    }
 
     return (
 
@@ -69,187 +65,103 @@ function AdminDashboard() {
 
             <h1>Kharido Admin Dashboard</h1>
 
-
-            {/* JWT Authentication Status */}
-
-            <div className="jwt-status">
-
-                {message && (
-                    <h3>
-                        {message}
-                    </h3>
-                )}
-
-                {error && (
-                    <h3>
-                        {error}
-                    </h3>
-                )}
-
-            </div>
-
+            {error && (
+                <h3 style={{ color: "red" }}>
+                    {error}
+                </h3>
+            )}
 
             <div className="dashboard-cards">
 
-
                 <div className="dashboard-card">
-
                     <h3>Total Vendors</h3>
-
-                    <h2>75</h2>
-
+                    <h2>{dashboard.totalSellers}</h2>
                     <p>Registered Vendors</p>
-
                 </div>
 
-
                 <div className="dashboard-card">
-
                     <h3>Total Users</h3>
-
-                    <h2>1200</h2>
-
+                    <h2>{dashboard.totalUsers}</h2>
                     <p>Registered Users</p>
-
                 </div>
 
-
                 <div className="dashboard-card">
-
                     <h3>Total Products</h3>
-
-                    <h2>500</h2>
-
+                    <h2>{dashboard.totalProducts}</h2>
                     <p>Available Products</p>
-
                 </div>
 
-
                 <div className="dashboard-card">
-
                     <h3>Total Orders</h3>
-
-                    <h2>350</h2>
-
+                    <h2>{dashboard.totalOrders}</h2>
                     <p>Customer Orders</p>
-
                 </div>
-
 
                 <div className="dashboard-card">
-
                     <h3>Revenue</h3>
-
                     <h2>₹2,50,000</h2>
-
                     <p>Total Sales</p>
-
                 </div>
-
 
             </div>
-
 
             <div className="activity-box">
 
                 <h2>Recent Activities</h2>
-
 
                 <table className="admin-table">
 
                     <thead>
 
                         <tr>
-
                             <th>Activity</th>
-
                             <th>Date</th>
-
                             <th>Status</th>
-
                         </tr>
 
                     </thead>
 
-
                     <tbody>
 
-
                         <tr>
-
-                            <td>
-                                New customer registered
-                            </td>
-
-                            <td>
-                                16 June 2026
-                            </td>
-
+                            <td>New customer registered</td>
+                            <td>16 June 2026</td>
                             <td>
                                 <span className="status completed">
                                     Completed
                                 </span>
                             </td>
-
                         </tr>
 
-
                         <tr>
-
-                            <td>
-                                New order placed
-                            </td>
-
-                            <td>
-                                16 June 2026
-                            </td>
-
+                            <td>New order placed</td>
+                            <td>16 June 2026</td>
                             <td>
                                 <span className="status pending">
                                     Processing
                                 </span>
                             </td>
-
                         </tr>
 
-
                         <tr>
-
-                            <td>
-                                Product stock updated
-                            </td>
-
-                            <td>
-                                15 June 2026
-                            </td>
-
+                            <td>Product stock updated</td>
+                            <td>15 June 2026</td>
                             <td>
                                 <span className="status completed">
                                     Updated
                                 </span>
                             </td>
-
                         </tr>
 
-
                         <tr>
-
-                            <td>
-                                Vendor added new product
-                            </td>
-
-                            <td>
-                                15 June 2026
-                            </td>
-
+                            <td>Vendor added new product</td>
+                            <td>15 June 2026</td>
                             <td>
                                 <span className="status completed">
                                     Added
                                 </span>
                             </td>
-
                         </tr>
-
 
                     </tbody>
 
@@ -257,11 +169,9 @@ function AdminDashboard() {
 
             </div>
 
-
         </div>
 
     );
 }
-
 
 export default AdminDashboard;

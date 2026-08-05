@@ -1,129 +1,515 @@
-function AdminOrders(){
+import { useEffect, useState } from "react";
 
-return(
 
-<div className="admin-page">
+function AdminOrders() {
 
 
-<h1>Orders Management</h1>
+    const [orders, setOrders] = useState([]);
 
-<hr/>
+    const [loading, setLoading] = useState(true);
 
+    const [error, setError] = useState("");
 
-<h2>View All Orders</h2>
 
 
-<div className="orders-box">
 
 
-<table className="admin-table">
+    const loadOrders = async () => {
 
 
-<thead>
+        try {
 
-<tr>
 
-<th>Order ID</th>
+            setLoading(true);
+            setError("");
 
-<th>Customer</th>
 
-<th>Status</th>
 
-<th>Action</th>
+            const response = await fetch(
 
-</tr>
+                "http://localhost:8082/api/admin/orders",
 
-</thead>
+                {
+                    credentials: "include"
+                }
 
+            );
 
 
-<tbody>
 
+            if (!response.ok) {
 
-<tr>
+                throw new Error(
+                    "Unable to fetch orders"
+                );
 
-<td>101</td>
+            }
 
-<td>Rahul</td>
 
 
-<td>
+            const data = await response.json();
 
-<span className="status pending">
-Pending
-</span>
 
-</td>
 
+            console.log(
+                "ORDER DATA = ",
+                data
+            );
 
-<td>
 
 
-<button className="edit-btn">
-Update Status
-</button>
+            setOrders(data);
 
 
-<button className="delete-btn">
-Cancel Order
-</button>
 
+        } catch(error) {
 
-</td>
 
+            console.error(error);
 
-</tr>
 
+            setError(
+                "Unable to load orders"
+            );
 
 
-<tr>
 
-<td>102</td>
+        } finally {
 
-<td>Amit</td>
 
+            setLoading(false);
 
-<td>
+        }
 
-<span className="status completed">
-Completed
-</span>
 
-</td>
+    };
 
 
-<td>
 
 
-<button className="edit-btn">
-Update Status
-</button>
 
 
-<button className="delete-btn">
-Cancel Order
-</button>
 
+    useEffect(()=>{
 
-</td>
 
+        loadOrders();
 
-</tr>
 
+    },[]);
 
 
-</tbody>
 
 
-</table>
 
 
-</div>
 
 
-</div>
+    const cancelOrder = async(id)=>{
 
-)
+
+        if(!window.confirm("Cancel this order?")) {
+
+            return;
+
+        }
+
+
+
+
+        try {
+
+
+            const response = await fetch(
+
+                `http://localhost:8082/api/admin/orders/${id}/status?status=CANCELLED`,
+
+                {
+
+                    method:"PUT",
+
+                    credentials:"include"
+
+                }
+
+            );
+
+
+
+
+            if(!response.ok) {
+
+                throw new Error(
+                    "Cancel failed"
+                );
+
+            }
+
+
+
+            loadOrders();
+
+
+
+
+        } catch(error) {
+
+
+            console.error(error);
+
+
+            setError(
+                "Unable to cancel order"
+            );
+
+
+        }
+
+
+    };
+
+
+
+
+
+
+
+    return (
+
+
+        <div className="admin-page">
+
+
+
+            <h1>
+                Orders Management
+            </h1>
+
+
+
+            <hr />
+
+
+
+
+
+            {
+                error &&
+
+
+                <div className="alert alert-danger">
+
+                    {error}
+
+                </div>
+
+
+            }
+
+
+
+
+
+
+
+            <h2>
+                All Orders
+            </h2>
+
+
+
+
+
+
+
+            <div className="orders-box">
+
+
+
+
+
+
+            {
+                loading ?
+
+
+                (
+
+                    <h4>
+                        Loading orders...
+                    </h4>
+
+                )
+
+
+
+                :
+
+
+
+                (
+
+
+                <table className="admin-table">
+
+
+
+                    <thead>
+
+
+                        <tr>
+
+
+                            <th>
+                                Order ID
+                            </th>
+
+
+                            <th>
+                                Customer
+                            </th>
+
+
+                            <th>
+                                Amount
+                            </th>
+
+
+                            <th>
+                                Payment
+                            </th>
+
+
+                            <th>
+                                Status
+                            </th>
+
+
+                            <th>
+                                Order Date
+                            </th>
+
+
+                            <th>
+                                Action
+                            </th>
+
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+
+
+
+
+                    <tbody>
+
+
+
+
+
+
+                    {
+                        orders.length === 0 &&
+
+
+                        <tr>
+
+                            <td colSpan="7">
+
+                                No Orders Found
+
+                            </td>
+
+
+                        </tr>
+
+
+                    }
+
+
+
+
+
+
+
+                    {
+                        orders.map(order => (
+
+
+
+                            <tr key={order.orderId}>
+
+
+                                <td>
+                                    {order.orderId}
+                                </td>
+
+
+
+
+
+                                <td>
+                                    {order.customerName}
+                                </td>
+
+
+
+
+
+                                <td>
+                                    ₹{order.totalAmount}
+                                </td>
+
+
+
+
+
+                                <td>
+                                    {order.paymentStatus}
+                                </td>
+
+
+
+
+
+                                <td>
+
+
+                                    <span
+
+                                    className={
+                                        order.orderStatus === "COMPLETED"
+
+                                        ?
+
+                                        "status completed"
+
+                                        :
+
+                                        order.orderStatus === "CANCELLED"
+
+                                        ?
+
+                                        "status cancelled"
+
+                                        :
+
+                                        "status pending"
+                                    }
+
+                                    >
+
+                                        {order.orderStatus}
+
+                                    </span>
+
+
+                                </td>
+
+
+
+
+
+
+
+
+                                <td>
+
+                                    {
+                                        order.createdAt
+                                        ?
+                                        order.createdAt.replace("T"," ")
+                                        :
+                                        "-"
+                                    }
+
+                                </td>
+
+
+
+
+
+
+
+                                <td>
+
+
+
+                                    {
+                                        order.orderStatus !== "CANCELLED"
+
+                                        &&
+
+
+                                        <button
+
+                                        className="delete-btn"
+
+                                        onClick={() =>
+                                            cancelOrder(
+                                                order.orderId
+                                            )
+                                        }
+
+                                        >
+
+                                            Cancel
+
+                                        </button>
+
+                                    }
+
+
+
+                                </td>
+
+
+
+
+
+                            </tr>
+
+
+
+                        ))
+                    }
+
+
+
+
+
+                    </tbody>
+
+
+
+
+                </table>
+
+
+                )
+
+            }
+
+
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+    );
+
 
 }
 

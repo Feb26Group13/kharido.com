@@ -1,199 +1,161 @@
-function AdminReports(){
+import { useEffect, useState } from "react";
 
-return(
+function AdminReports() {
 
-<div className="admin-page">
+    const [reports, setReports] = useState({
+        totalUsers: 0,
+        totalSellers: 0,
+        totalProducts: 0,
+        totalOrders: 0
+    });
 
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-<h1>Reports & Analytics</h1>
+    const loadReports = async () => {
 
+        try {
 
-<hr/>
+            setLoading(true);
+            setError("");
 
+            const response = await fetch(
+                "http://localhost:8082/api/admin/reports",
+                {
+                    credentials: "include"
+                }
+            );
 
+            if (!response.ok) {
+                throw new Error("Unable to fetch reports");
+            }
 
+            const data = await response.json();
 
-<div className="report-container">
+            console.log("REPORT DATA =", data);
 
+            setReports(data);
 
+        } catch (error) {
 
-<div className="report-card">
+            console.error(error);
+            setError("Unable to load reports");
 
-<h3>Sales Reports</h3>
+        } finally {
 
-<h2>₹2,50,000</h2>
+            setLoading(false);
 
-<p>
-Total Revenue Generated
-</p>
+        }
+    };
 
-</div>
+    useEffect(() => {
 
+        loadReports();
 
+    }, []);
 
+    return (
 
+        <div className="admin-page">
 
-<div className="report-card">
+            <h1>Reports & Analytics</h1>
 
-<h3>Order Reports</h3>
+            <hr />
 
-<h2>300</h2>
+            {error && (
+                <div className="alert alert-danger">
+                    {error}
+                </div>
+            )}
 
-<p>
-Completed Orders
-</p>
+            {loading ? (
 
-</div>
+                <h4>Loading reports...</h4>
 
+            ) : (
 
+                <>
+                    <div className="report-container">
 
+                        <div className="report-card">
+                            <h3>Total Users</h3>
+                            <h2>{reports.totalUsers}</h2>
+                            <p>Registered Users</p>
+                        </div>
 
+                        <div className="report-card">
+                            <h3>Total Sellers</h3>
+                            <h2>{reports.totalSellers}</h2>
+                            <p>Registered Sellers</p>
+                        </div>
 
-<div className="report-card">
+                        <div className="report-card">
+                            <h3>Total Products</h3>
+                            <h2>{reports.totalProducts}</h2>
+                            <p>Available Products</p>
+                        </div>
 
-<h3>Customer Reports</h3>
+                        <div className="report-card">
+                            <h3>Total Orders</h3>
+                            <h2>{reports.totalOrders}</h2>
+                            <p>Orders Received</p>
+                        </div>
 
-<h2>120</h2>
+                    </div>
 
-<p>
-New Customers
-</p>
+                    <br />
 
-</div>
+                    <div className="activity-box">
 
+                        <h2>System Summary</h2>
 
+                        <table className="admin-table">
 
+                            <thead>
 
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Count</th>
+                                </tr>
 
-<div className="report-card">
+                            </thead>
 
-<h3>Product Performance</h3>
+                            <tbody>
 
+                                <tr>
+                                    <td>Total Users</td>
+                                    <td>{reports.totalUsers}</td>
+                                </tr>
 
-<ul>
+                                <tr>
+                                    <td>Total Sellers</td>
+                                    <td>{reports.totalSellers}</td>
+                                </tr>
 
-<li>
-📱 Mobile - Best Selling
-</li>
+                                <tr>
+                                    <td>Total Products</td>
+                                    <td>{reports.totalProducts}</td>
+                                </tr>
 
+                                <tr>
+                                    <td>Total Orders</td>
+                                    <td>{reports.totalOrders}</td>
+                                </tr>
 
-<li>
-💻 Laptop - High Revenue
-</li>
+                            </tbody>
 
+                        </table>
 
-<li>
-🎧 Headphones - Trending
-</li>
+                    </div>
 
+                </>
 
-</ul>
+            )}
 
+        </div>
 
-</div>
-
-
-
-
-</div>
-
-
-
-<br/>
-
-
-
-
-<div className="activity-box">
-
-
-<h2>Monthly Summary</h2>
-
-
-
-<table className="admin-table">
-
-
-<thead>
-
-<tr>
-
-<th>Month</th>
-
-<th>Sales</th>
-
-<th>Orders</th>
-
-<th>Customers</th>
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody>
-
-
-<tr>
-
-<td>January</td>
-
-<td>₹80,000</td>
-
-<td>100</td>
-
-<td>40</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>February</td>
-
-<td>₹90,000</td>
-
-<td>120</td>
-
-<td>50</td>
-
-</tr>
-
-
-
-<tr>
-
-<td>March</td>
-
-<td>₹80,000</td>
-
-<td>80</td>
-
-<td>30</td>
-
-</tr>
-
-
-
-</tbody>
-
-
-</table>
-
-
-
-</div>
-
-
-
-</div>
-
-)
+    );
 
 }
-
 
 export default AdminReports;

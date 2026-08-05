@@ -1,247 +1,503 @@
-function AdminProducts(){
+import { useEffect, useState } from "react";
 
-return(
 
-<div className="admin-page">
+function AdminProducts() {
 
+    const [products, setProducts] = useState([]);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
 
-<h1>Product Management</h1>
 
 
-<hr/>
+    const loadProducts = async () => {
 
+        try {
 
+            setLoading(true);
+            setError("");
 
 
-<div className="product-admin-box">
+            const response = await fetch(
+                "http://localhost:8082/api/admin/products",
+                {
+                    credentials: "include"
+                }
+            );
 
 
-<h2>Product Actions</h2>
+            if (!response.ok) {
 
+                throw new Error(
+                    "Unable to fetch products"
+                );
 
-<div className="product-actions">
+            }
 
 
-<button className="add-btn">
-+ Add Product
-</button>
+            const data = await response.json();
 
 
+            console.log(
+                "PRODUCT DATA = ",
+                data
+            );
 
-<button className="edit-btn">
-Edit Product
-</button>
 
+            setProducts(data);
 
 
-<button className="delete-btn">
-Delete Product
-</button>
 
+        } catch(error) {
 
-</div>
 
+            console.error(error);
 
-</div>
+            setError(
+                "Unable to load products"
+            );
 
 
+        } finally {
 
 
+            setLoading(false);
 
-<br/>
+        }
 
+    };
 
 
 
-<div className="product-admin-box">
+    useEffect(()=>{
 
+        loadProducts();
 
-<h2>Manage Categories</h2>
+    },[]);
 
 
 
-<div className="category-container">
 
+    const approveProduct = async(id)=>{
 
-<div className="category-card">
 
-<h3>Electronics</h3>
+        try {
 
-<p>Laptops, Mobiles, Accessories</p>
 
-</div>
+            const response = await fetch(
 
+                `http://localhost:8082/api/admin/products/${id}/approve`,
 
+                {
+                    method:"PUT",
+                    credentials:"include"
+                }
 
-<div className="category-card">
+            );
 
-<h3>Fashion</h3>
 
-<p>Clothes, Shoes, Bags</p>
+            if(!response.ok){
 
-</div>
+                throw new Error(
+                    "Approve failed"
+                );
 
+            }
 
 
-<div className="category-card">
+            loadProducts();
 
-<h3>Home Appliances</h3>
 
-<p>Furniture, Kitchen Items</p>
 
-</div>
+        }catch(error){
 
 
+            console.error(error);
 
-<div className="category-card">
+            setError(
+                "Unable to approve product"
+            );
 
-<h3>Groceries</h3>
 
-<p>Daily Essentials</p>
+        }
 
-</div>
 
+    };
 
-</div>
 
 
-</div>
 
+    const rejectProduct = async(id)=>{
 
 
+        try {
 
 
-<br/>
+            const response = await fetch(
 
+                `http://localhost:8082/api/admin/products/${id}/reject`,
 
+                {
+                    method:"PUT",
+                    credentials:"include"
+                }
 
+            );
 
-<div className="product-admin-box">
 
+            if(!response.ok){
 
-<h2>Inventory / Stock</h2>
+                throw new Error(
+                    "Reject failed"
+                );
 
+            }
 
 
-<table className="admin-table">
+            loadProducts();
 
 
-<thead>
 
+        }catch(error){
 
-<tr>
 
-<th>Product</th>
+            console.error(error);
 
-<th>Stock Quantity</th>
+            setError(
+                "Unable to reject product"
+            );
 
-<th>Status</th>
 
-</tr>
+        }
 
 
-</thead>
+    };
 
 
 
 
-<tbody>
 
+    const deleteProduct = async(id)=>{
 
-<tr>
 
-<td>
-Laptop
-</td>
+        if(!window.confirm("Delete this product?")){
 
+            return;
 
-<td>
-50
-</td>
+        }
 
 
-<td>
 
-<span className="status completed">
-Available
-</span>
+        try{
 
-</td>
 
+            const response = await fetch(
 
-</tr>
+                `http://localhost:8082/api/admin/products/${id}`,
 
+                {
+                    method:"DELETE",
+                    credentials:"include"
+                }
 
+            );
 
 
 
-<tr>
+            if(!response.ok){
 
+                throw new Error(
+                    "Delete failed"
+                );
 
-<td>
-Mobile
-</td>
+            }
 
 
-<td>
-100
-</td>
 
+            loadProducts();
 
-<td>
 
-<span className="status completed">
-Available
-</span>
 
-</td>
+        }catch(error){
 
 
-</tr>
+            console.error(error);
 
+            setError(
+                "Unable to delete product"
+            );
 
 
+        }
 
-<tr>
 
+    };
 
-<td>
-Headphones
-</td>
 
 
-<td>
-5
-</td>
 
 
-<td>
+    return (
 
-<span className="status pending">
-Low Stock
-</span>
+        <div className="container mt-4">
 
-</td>
 
+            <h2>
+                Product Management
+            </h2>
 
-</tr>
 
+            <h5>
+                Total Products : {products.length}
+            </h5>
 
 
-</tbody>
 
+            {
+                error &&
 
-</table>
+                <div className="alert alert-danger">
 
+                    {error}
 
+                </div>
 
-</div>
+            }
 
 
 
-</div>
+            {
+                loading ?
 
-)
+                <h5>
+                    Loading products...
+                </h5>
+
+
+                :
+
+
+
+                <table className="table table-bordered table-hover">
+
+
+                    <thead className="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Seller</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Approval</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+
+                        </tr>
+
+
+                    </thead>
+
+
+
+
+                    <tbody>
+
+
+                    {
+                        products.length===0 &&
+
+                        <tr>
+
+                            <td colSpan="8"
+                            className="text-center">
+
+                                No Products Found
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+
+
+
+
+                    {
+                        products.map(product=>(
+
+
+                            <tr key={product.productId}>
+
+
+                                <td>
+                                    {product.productId}
+                                </td>
+
+
+                                <td>
+                                    {product.productName}
+                                </td>
+
+
+                                <td>
+                                    {product.sellerName}
+                                </td>
+
+
+                                <td>
+                                    ₹{product.price}
+                                </td>
+
+
+                                <td>
+                                    {product.stockQuantity}
+                                </td>
+
+
+
+                                <td>
+
+
+                                    <span
+                                    className={
+                                        product.approvalStatus==="APPROVED"
+
+                                        ?
+
+                                        "badge bg-success"
+
+                                        :
+
+                                        product.approvalStatus==="REJECTED"
+
+                                        ?
+
+                                        "badge bg-danger"
+
+                                        :
+
+                                        "badge bg-warning text-dark"
+                                    }>
+
+
+                                    {product.approvalStatus}
+
+
+                                    </span>
+
+
+                                </td>
+
+
+
+
+                                <td>
+
+
+                                    <span
+                                    className="badge bg-success">
+
+                                    {product.status}
+
+                                    </span>
+
+
+                                </td>
+
+
+
+
+
+                                <td>
+
+
+                                    <button
+
+                                    className="btn btn-success btn-sm me-2"
+
+                                    disabled={
+                                        product.approvalStatus==="APPROVED"
+                                    }
+
+                                    onClick={()=>
+                                        approveProduct(
+                                            product.productId
+                                        )
+                                    }>
+
+                                    Approve
+
+                                    </button>
+
+
+
+
+
+                                    <button
+
+                                    className="btn btn-warning btn-sm me-2"
+
+                                    disabled={
+                                        product.approvalStatus==="REJECTED"
+                                    }
+
+                                    onClick={()=>
+                                        rejectProduct(
+                                            product.productId
+                                        )
+                                    }>
+
+                                    Reject
+
+                                    </button>
+
+
+
+
+
+                                    <button
+
+                                    className="btn btn-danger btn-sm"
+
+                                    onClick={()=>
+                                        deleteProduct(
+                                            product.productId
+                                        )
+                                    }>
+
+                                    Delete
+
+                                    </button>
+
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        ))
+                    }
+
+
+                    </tbody>
+
+
+
+                </table>
+
+
+            }
+
+
+
+        </div>
+
+    );
+
 
 }
 

@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
-export default function LoginComp() {
+function LoginComp() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {
 
@@ -18,10 +15,12 @@ export default function LoginComp() {
         setMsg("");
 
         try {
+
             const response = await fetch(
                 "http://localhost:8081/api/auth/login",
                 {
                     method: "POST",
+                    credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -32,116 +31,199 @@ export default function LoginComp() {
                 }
             );
 
+
             const data = await response.json();
 
-            console.log("Spring Boot Response:", data);
+            console.log("Login Response:", data);
 
-            // Login failed
-            if (!data.token) {
-                setMsg(data.message || "Invalid username or password");
+
+            if (!response.ok) {
+
+                setMsg(data.message || "Login Failed");
                 return;
+
             }
 
-            const userData = {
-                username: data.username,
-                role: data.role,
+
+            // Save logged-in user details
+            const authData = {
+
+                user: {
+                    username: data.username,
+                    role: data.role,
+                },
+
+                token: data.token,
+
             };
 
-            dispatch(
-                login({
-                    token: data.token,
-                    user: userData,
-                })
-            );
 
             localStorage.setItem(
                 "auth",
-                JSON.stringify({
-                    token: data.token,
-                    user: userData,
-                })
+                JSON.stringify(authData)
             );
 
-            console.log("JWT Token Saved:", data.token);
+
+            // Optional: separate username storage
+            // easier for navbar/header display
+            localStorage.setItem(
+                "username",
+                data.username
+            );
+
+
+            console.log(
+                "Logged User:",
+                data.username,
+                data.role
+            );
+
 
             switch (data.role) {
 
+
                 case "ADMIN":
+
                     navigate("/admin");
                     break;
 
+
                 case "SELLER":
+
                     navigate("/seller");
                     break;
 
+
                 case "CUSTOMER":
+
                     navigate("/user");
                     break;
 
+
                 case "DELIVERY":
+
                     navigate("/delivery");
                     break;
 
+
                 default:
-                    setMsg("Invalid user role: " + data.role);
-                    break;
+
+                    setMsg(
+                        "Unknown Role : " + data.role
+                    );
+
             }
+
 
         } catch (error) {
 
-            console.error("Login Error:", error);
+            console.error(error);
 
             setMsg(
-                "Unable to connect to Spring Boot Backend. Make sure Spring Boot is running on port 8081."
+                "Unable to connect to backend."
             );
+
         }
+
     };
 
-    return (
-        <div>
 
-            <h1>Login Form</h1>
+    return (
+
+        <div className="container mt-5">
+
+
+            <h2>Login</h2>
+
 
             <form onSubmit={handleSubmit}>
 
-                <label>Enter Username:</label>
-                <br />
 
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
+                <div className="mb-3">
 
-                <br />
-                <br />
+                    <label>
+                        Username
+                    </label>
 
-                <label>Enter Password:</label>
-                <br />
 
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+                    <input
 
-                <br />
-                <br />
+                        className="form-control"
 
-                <button type="submit">
-                    LOGIN
+                        type="text"
+
+                        value={username}
+
+                        onChange={(e)=>
+                            setUsername(e.target.value)
+                        }
+
+                        required
+
+                    />
+
+                </div>
+
+
+
+                <div className="mb-3">
+
+                    <label>
+                        Password
+                    </label>
+
+
+                    <input
+
+                        className="form-control"
+
+                        type="password"
+
+                        value={password}
+
+                        onChange={(e)=>
+                            setPassword(e.target.value)
+                        }
+
+                        required
+
+                    />
+
+                </div>
+
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary"
+                >
+
+                    Login
+
                 </button>
+
+
 
             </form>
 
-            {msg && (
-                <p style={{ color: "red" }}>
+
+
+            {
+                msg &&
+
+                <p className="text-danger mt-3">
+
                     {msg}
+
                 </p>
-            )}
+            }
+
 
         </div>
+
     );
+
 }
+
+
+export default LoginComp;
