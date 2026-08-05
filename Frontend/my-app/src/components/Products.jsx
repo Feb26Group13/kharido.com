@@ -1,50 +1,120 @@
-import React from "react";
-import laptop from "../assets/laptop.jpg";
-import mobile from "../assets/mobile.jpg";
-import headphone from "../assets/headphone.jpg";
+import "../styles/Products.css";
 
-function Products() {
-  const products = [
-    {
-      id: 1,
-      name: "Laptop",
-      price: "₹70,000",
-       image: laptop
-    },
-    {
-      id: 2,
-      name: "Mobile",
-      price: "₹60,000",
-       image: mobile
-    },
-    {
-      id: 3,
-      name: "Headphones",
-      price: "₹2,000",
-       image: headphone
-    }
-  ];
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import StarIcon from "@mui/icons-material/Star";
 
+const products = [
+  {
+    id: 1,
+    name: "iPhone 16 Pro",
+    price: "₹1,19,999",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500",
+  },
+  {
+    id: 2,
+    name: "HP Pavilion Laptop",
+    price: "₹69,999",
+    image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500",
+  },
+  {
+    id: 3,
+    name: "Nike Sneakers",
+    price: "₹5,999",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500",
+  },
+  {
+    id: 4,
+    name: "Smart Watch",
+    price: "₹3,999",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",
+  },
+];
+
+export default function Products() {
   return (
-    <section className="products">
-      <h2>Featured Products</h2>
+    <section className="products-section">
 
-      <div className="product-container">
-        {products.map((product) => (
-          <div key={product.id} className="product-card">
+      <div className="container">
 
-            <img
-              src={product.image}
-              alt={product.name}
-            />
-            <h3>{product.name}</h3>
-            <p>{product.price}</p>
-            <button>Add to Cart</button>
-          </div>
-        ))}
+        <h2 className="products-title">
+          Featured Products
+        </h2>
+
+        <p className="products-subtitle">
+          Explore our latest collection
+        </p>
+
+        <div className="row">
+
+          {products.map((product) => (
+
+            <div
+              className="col-lg-3 col-md-6 mb-4"
+              key={product.id}
+            >
+
+              <div className="product-card">
+
+                <div className="product-image">
+
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                  />
+
+                  <span className="discount">
+                    New
+                  </span>
+
+                </div>
+
+                <div className="product-body">
+
+                  <h5>{product.name}</h5>
+
+                  <div className="rating">
+
+                    <StarIcon />
+                    <StarIcon />
+                    <StarIcon />
+                    <StarIcon />
+                    <StarIcon />
+
+                  </div>
+
+                  <h4>{product.price}</h4>
+
+                  <div className="product-buttons">
+
+                    <button className="wishlist-btn">
+
+                      <FavoriteBorderIcon />
+
+                    </button>
+
+                    <button className="cart-btn">
+
+                      <ShoppingCartIcon />
+
+                      Add to Cart
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          ))}
+
+        </div>
+
       </div>
+
     </section>
   );
 }
-
-export default Products;
